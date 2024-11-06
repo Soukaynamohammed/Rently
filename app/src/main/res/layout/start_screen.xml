@@ -1,0 +1,45 @@
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/start_screen"
+    android:background="@color/background"
+    android:gravity="center_horizontal"
+        >
+
+    <ImageView
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="100dp"
+        android:layout_width="202dp"
+        android:layout_height="128dp"
+        android:src="@drawable/logo"
+        android:contentDescription="@string/rently_logo" />
+
+    <Button
+        android:id="@+id/login"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:layout_margin="10dp"
+        android:backgroundTint="@color/button_background"
+        android:fontFamily="@font/inter_semibold"
+        android:text="@string/login"
+        android:textColor="@color/button_text"
+        android:textSize="40sp"
+        app:cornerRadius="20dp" />
+
+    <Button
+        android:id="@+id/register"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:layout_margin="10dp"
+        android:layout_marginTop="200dp"
+        android:backgroundTint="@color/button_background"
+        android:fontFamily="@font/inter_semibold"
+        android:text="@string/register"
+        android:textColor="@color/button_text"
+        android:textSize="40sp"
+        app:cornerRadius="20dp" />
+</LinearLayout>
+
+
