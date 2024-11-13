@@ -11,4 +11,5 @@
     <color name="background">#F2900E</color>
     <color name="button_background">#CD5525</color>
     <color name="text">#94590A</color>
+    <color name="error">#ff3333</color>
 </resources>
