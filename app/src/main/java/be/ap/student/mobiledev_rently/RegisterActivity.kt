@@ -32,6 +32,7 @@ class RegisterActivity: AppCompatActivity(){
                 }
                 if (result != null){
                     val menuIntent = android.content.Intent(this, MenuActivity::class.java)
+                    menuIntent.putExtra("user", user)
                     startActivity(menuIntent)
                 }
             }

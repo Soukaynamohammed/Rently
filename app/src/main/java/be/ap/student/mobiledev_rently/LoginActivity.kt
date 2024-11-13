@@ -30,6 +30,7 @@ class LoginActivity: AppCompatActivity(){
                 }
                 if(user?.getPassword() == password){
                     val menuIntent = android.content.Intent(this, MenuActivity::class.java)
+                    menuIntent.putExtra("user", user)
                     startActivity(menuIntent)
                 }
             }
