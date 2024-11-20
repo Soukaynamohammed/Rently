@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/start_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="202dp"
+            android:layout_height="128dp"
+            android:layout_marginLeft="15dp"
+            android:layout_gravity="start"
+            android:contentDescription="@string/rently_logo"
+            android:src="@drawable/logo" />
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/profileCard"
+            android:layout_width="411dp"
+            android:layout_height="450dp"
+            android:layout_margin="16dp"
+            android:backgroundTint="#FFFFFF"
+            app:cardElevation="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/profileCardBeige"
+                android:layout_width="411dp"
+                android:layout_height="250dp"
+                android:layout_marginTop="150dp"
+                android:backgroundTint="#ECE5DC"
+                app:cardElevation="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+
+                <TextView
+                    android:id="@+id/username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="10dp"
+                    android:text="Username" />
+
+                <TextView
+                    android:id="@+id/usernameValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="10dp"
+                    android:text="Username" />
+
+                <TextView
+                    android:id="@+id/Email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="80dp"
+                    android:text="Email" />
+
+                <TextView
+                    android:id="@+id/emailValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="10dp"
+                    android:text="Username" />
+
+            </androidx.cardview.widget.CardView>
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                tools:srcCompat="@tools:sample/avatars" />
+
+        </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/register"
+            android:layout_width="300dp"
+            android:layout_height="70dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
+            android:backgroundTint="@color/button_background"
+            android:fontFamily="@font/inter_semibold"
+            android:text="@string/Edit"
+            android:textColor="@color/button_text"
+            android:textSize="30sp"
+            app:cornerRadius="20dp" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
