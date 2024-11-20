@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChangeProfileFragment">
+
+    <LinearLayout
+        android:id="@+id/start_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        >
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/profileCard"
+            android:layout_width="411dp"
+            android:layout_height="450dp"
+            android:layout_margin="16dp"
+            android:backgroundTint="#FFFFFF">
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/profileCardBeige"
+                android:layout_width="411dp"
+                android:layout_height="250dp"
+                android:layout_marginTop="150dp"
+                android:backgroundTint="#ECE5DC">
+
+
+
+
+                <TextView
+                    android:id="@+id/username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/username" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_marginLeft="35dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginTop="50dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/usernameValue2"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:hint="@string/username"
+                        android:textSize="20sp" />
+
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/Email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="120dp"
+                    android:text="Email" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_marginLeft="35dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginTop="150dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/emailValue2"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:hint="@string/email"
+                        android:textSize="20sp" />
+
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+            </androidx.cardview.widget.CardView>
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:contentDescription="Profile Picture"
+                android:clickable="true"
+                android:focusable="true"
+                tools:srcCompat="@tools:sample/avatars" />
+
+        </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="300dp"
+            android:layout_height="70dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
+            android:backgroundTint="@color/black"
+            android:fontFamily="@font/inter_semibold"
+            android:text="@string/save"
+            android:textSize="30sp"     />
+
+
+    </LinearLayout>
+
+</FrameLayout>

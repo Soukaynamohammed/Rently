@@ -40,8 +40,7 @@ class MenuActivity : AppCompatActivity() {
                     true
                 }
                 R.id.navigation_profile->{
-                    //TODO: replace fragment
-                    loadFragment(HomeFragment())
+                    loadFragment(ProfileFragment())
                     true
                 }
 
