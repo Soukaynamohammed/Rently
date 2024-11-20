@@ -26,7 +26,6 @@
             android:theme="@style/Theme.AppCompat">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -34,25 +33,16 @@
             android:name=".LoginActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat">
-            <intent-filter>
-                <action android:name="android.intent.action.LOGIN" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".RegisterActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat">
-            <intent-filter>
-                <action android:name="android.intent.action.LOGIN" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".MenuActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat">
-            <intent-filter>
-                <action android:name="android.intent.action.MENU" />
-            </intent-filter>
         </activity>
 
         <meta-data
