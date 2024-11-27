@@ -1,6 +1,8 @@
 package be.ap.student.mobiledev_rently.util
 import be.ap.student.mobiledev_rently.dataClasses.User
+import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
@@ -8,9 +10,7 @@ import kotlinx.coroutines.tasks.await
 
 class FireBaseCommunication {
     private val users = FirebaseFirestore.getInstance().collection("/users")
-    private val items = FirebaseFirestore.getInstance().collection("/items")
     private val db = Firebase.firestore
-
     suspend fun writeNewUser(user: User) : User?{
         return if (getUser(user.getEmail()) == null){
             db.collection("users").document()
@@ -18,7 +18,6 @@ class FireBaseCommunication {
             user
         } else null
     }
-
     suspend fun getUser(email: String?): User? {
         if (email == null) return null
         try {
