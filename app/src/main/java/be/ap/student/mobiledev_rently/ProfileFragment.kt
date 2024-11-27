@@ -7,7 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.FragmentManager
 import be.ap.student.mobiledev_rently.dataClasses.User
+import be.ap.student.mobiledev_rently.databinding.FragmentChangeProfileBinding
+import be.ap.student.mobiledev_rently.databinding.FragmentProfileBinding
 
 /**
  * A simple [Fragment] subclass.
@@ -15,10 +19,12 @@ import be.ap.student.mobiledev_rently.dataClasses.User
  * create an instance of this fragment.
  */
 class ProfileFragment : Fragment() {
+    private lateinit var binding: FragmentProfileBinding
     private var user: User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         arguments?.let {
             user = it.getParcelable("user", User::class.java)
         }
@@ -28,30 +34,54 @@ class ProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding = FragmentProfileBinding.inflate(inflater, container, false)
+        val view = binding.root
 
-        val view = inflater.inflate(R.layout.fragment_profile, container, false)
-        val usernameTextView: TextView = view.findViewById(R.id.usernameValue)
-        val emailTextView: TextView = view.findViewById(R.id.emailValue)
+        binding.root
+
+        val usernameTextView: TextView = binding.usernameValue;
+        val emailTextView: TextView = binding.emailValue
+        val editButton: Button = binding.edit
+
 
         user?.let {
             usernameTextView.text = it.getUsername()
             emailTextView.text = it.getEmail()
         }
 
-        val editButton: Button = view.findViewById(R.id.register)
 
         editButton.setOnClickListener {
+
             user?.let {
+                Toast.makeText(requireContext(), "Edit button clicked", Toast.LENGTH_SHORT).show()
                 val fragment = ChangeProfileFragment.newInstance(it)
+
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.start_screen, fragment) // Replace 'R.id.container' with the correct container ID
-                    .addToBackStack(null) // Add to back stack to allow back navigation
+                    .replace(R.id.container, fragment)
+                    .addToBackStack(null)
                     .commit()
             }
+
+//            user?.let {
+//                val fragment = ChangeProfileFragment.newInstance(it)
+//                (activity as? MenuActivity)?.loadFragment(fragment) // Call loadFragment from MenuActivity
+//            }
         }
+
+
 
         return view
 
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance(user: User?) =
+            ProfileFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable("user", user)
+                }
+            }
     }
 
 

@@ -23,7 +23,7 @@ class RegisterActivity: AppCompatActivity(){
                 val email = binding.email.text.toString().trim()
                 val password = binding.password.text.toString().trim()
                 val username = binding.username.text.toString().trim()
-                val user = User(email, username, password, null)
+                val user = User(email, username, password, null,null)
                 var result: User? = null
                 runBlocking {
                     launch{

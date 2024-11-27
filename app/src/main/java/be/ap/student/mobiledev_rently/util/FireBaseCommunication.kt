@@ -27,7 +27,7 @@ class FireBaseCommunication {
             val result = documentQuery.result
             if (result.get("username") == null) return null
             return User(email, result.get("username").toString(),
-                result.get("password").toString(), null )
+                result.get("password").toString(), null ,null)
         } catch (e: Exception) {
             throw e
         }

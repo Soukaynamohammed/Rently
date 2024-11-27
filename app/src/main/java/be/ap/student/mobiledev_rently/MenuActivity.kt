@@ -40,7 +40,8 @@ class MenuActivity : AppCompatActivity() {
                     true
                 }
                 R.id.navigation_profile->{
-                    loadFragment(ProfileFragment())
+                    val profileFragment = ProfileFragment.newInstance(user)
+                    loadFragment(profileFragment)
                     true
                 }
 
@@ -51,9 +52,14 @@ class MenuActivity : AppCompatActivity() {
             }
         }
     }
-    private fun loadFragment(fragment: Fragment){
+
+    fun getUser(): User? { return this.user }
+
+    public fun loadFragment(fragment: Fragment){
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.container, fragment)
         transaction.commit()
     }
+
+
 }

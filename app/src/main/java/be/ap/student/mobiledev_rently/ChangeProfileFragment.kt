@@ -1,5 +1,6 @@
 package be.ap.student.mobiledev_rently
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,7 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
+import androidx.activity.result.contract.ActivityResultContract
 import be.ap.student.mobiledev_rently.dataClasses.User
+import be.ap.student.mobiledev_rently.databinding.FragmentChangeProfileBinding
+import androidx.activity.result.contract.ActivityResultContracts
+
 
 /**
  * A simple [Fragment] subclass.
@@ -16,7 +22,8 @@ import be.ap.student.mobiledev_rently.dataClasses.User
  */
 class ChangeProfileFragment : Fragment() {
     private var user: User? = null
-//    private lateinit var binding;
+    private lateinit var binding: FragmentChangeProfileBinding
+    private var selectedImageUri: Uri? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,22 +38,47 @@ class ChangeProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding = FragmentChangeProfileBinding.inflate(inflater, container, false)
+        val view = binding.root
 
-        val view = inflater.inflate(R.layout.fragment_change_profile, container, false)
-        val nameEditText: EditText = view.findViewById(R.id.usernameValue2)
-        val emailEditText: EditText = view.findViewById(R.id.emailValue2)
-        val saveButton:  Button = view.findViewById(R.id.saveButton)
+        val nameEditText: EditText = binding.usernameValue2
+        val emailEditText: EditText = binding.emailValue2
+        val saveButton:  Button = binding.saveButton
+        val imageUrl: ImageView = binding.imageView;
+        val imageView: ImageView = binding.imageView
 
         user?.let {
-            nameEditText.setText(it.getUsername()) // Replace 'name' with the actual property in your User class
-            emailEditText.setText(it.getEmail()) // Replace 'email' with the actual property in your User class
+            nameEditText.setText(it.getUsername())
+            emailEditText.setText(it.getEmail())
         }
 
-        //TODO : IMAGE UPLOAD MAKEN
+        val pickImageLauncher = registerForActivityResult(
+            ActivityResultContracts.GetContent()
+        ){ uri: Uri? ->
+            uri?.let {
+                selectedImageUri = it
+                imageView.setImageURI(uri)
+            }
+        }
 
-//        saveButton.setOnClickListener(
-//
-//        );
+        imageView.setOnClickListener {
+            pickImageLauncher.launch("image/*")
+        }
+
+        saveButton.setOnClickListener {
+            user?.let {
+                it.setUsername(nameEditText.text.toString())
+                it.setEmail(emailEditText.text.toString())
+                it.setImageUrl(imageUrl.sourceLayoutResId.toString())
+            }
+
+            val profileFragment = ProfileFragment.newInstance(user)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.container, profileFragment)
+                .addToBackStack(null)
+                .commit()
+
+        }
 
         return view;
     }
