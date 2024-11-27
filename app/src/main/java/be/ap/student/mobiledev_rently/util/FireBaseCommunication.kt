@@ -11,6 +11,7 @@ import kotlinx.coroutines.tasks.await
 class FireBaseCommunication {
     private val users = FirebaseFirestore.getInstance().collection("/users")
     private val db = Firebase.firestore
+
     suspend fun writeNewUser(user: User) : User?{
         return if (getUser(user.getEmail()) == null){
             db.collection("users").document(user.getEmail()!!)
@@ -18,6 +19,7 @@ class FireBaseCommunication {
             user
         } else null
     }
+
     suspend fun getUser(email: String?): User? {
         if (email == null) return email
         try {
@@ -31,5 +33,10 @@ class FireBaseCommunication {
         } catch (e: Exception) {
             throw e
         }
+    }
+
+    suspend fun changePassword(email: String?){
+
+
     }
 }

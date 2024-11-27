@@ -39,9 +39,10 @@ class ProfileFragment : Fragment() {
 
         binding.root
 
-        val usernameTextView: TextView = binding.usernameValue;
+        val usernameTextView: TextView = binding.usernameValue
         val emailTextView: TextView = binding.emailValue
         val editButton: Button = binding.edit
+        val changePassButton : Button = binding.changePassword
 
 
         user?.let {
@@ -51,22 +52,29 @@ class ProfileFragment : Fragment() {
 
 
         editButton.setOnClickListener {
-
             user?.let {
-                Toast.makeText(requireContext(), "Edit button clicked", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(requireContext(), "Edit button clicked", Toast.LENGTH_SHORT).show()
                 val fragment = ChangeProfileFragment.newInstance(it)
-
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.container, fragment)
                     .addToBackStack(null)
                     .commit()
             }
-
-//            user?.let {
-//                val fragment = ChangeProfileFragment.newInstance(it)
-//                (activity as? MenuActivity)?.loadFragment(fragment) // Call loadFragment from MenuActivity
-//            }
         }
+
+        changePassButton.setOnClickListener{
+            user?.let {
+                Toast.makeText(requireContext(), "Change password button clicked", Toast.LENGTH_SHORT).show()
+
+                val fragment = ChangePasswordFragment.newInstance(it);
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.container, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
+
+
 
 
 
