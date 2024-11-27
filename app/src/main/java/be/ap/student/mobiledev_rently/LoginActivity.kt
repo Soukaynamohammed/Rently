@@ -19,9 +19,9 @@ class LoginActivity: AppCompatActivity(){
         setContentView(view)
         supportActionBar?.hide()
         binding.login.setOnClickListener{
-            if (binding.email.text != null && binding.password.text != null){
-                val email = binding.email.text.toString().trim()
-                val password = binding.password.text.toString().trim()
+            val email = binding.email.text.toString().trim()
+            val password = binding.password.text.toString().trim()
+            if (email != "" && password != ""){
                 var user : User? = null
                 runBlocking {
                     launch{
@@ -32,11 +32,16 @@ class LoginActivity: AppCompatActivity(){
                     val menuIntent = android.content.Intent(this, MenuActivity::class.java)
                     menuIntent.putExtra("user", user)
                     startActivity(menuIntent)
+                }else{
+                    val snackbar = Snackbar.make(view, "the email or password is wrong", Snackbar.LENGTH_SHORT)
+                    snackbar.setTextColor(ContextCompat.getColor(this, R.color.error))
+                    snackbar.show()
                 }
+            }else{
+                val snackbar = Snackbar.make(view, "please fill in all the fields", Snackbar.LENGTH_SHORT)
+                snackbar.setTextColor(ContextCompat.getColor(this, R.color.error))
+                snackbar.show()
             }
-            val snackbar = Snackbar.make(view, "the email or password is wrong", Snackbar.LENGTH_SHORT)
-            snackbar.setTextColor(ContextCompat.getColor(this, R.color.error))
-            snackbar.show()
         }
     }
 }

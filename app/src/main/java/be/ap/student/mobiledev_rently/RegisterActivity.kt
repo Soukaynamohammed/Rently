@@ -19,11 +19,13 @@ class RegisterActivity: AppCompatActivity(){
         setContentView(view)
         supportActionBar?.hide()
         binding.register.setOnClickListener{
-            if (binding.email.text != null && binding.password.text != null && binding.username.text != null){
-                val email = binding.email.text.toString().trim()
-                val password = binding.password.text.toString().trim()
-                val username = binding.username.text.toString().trim()
-                val user = User(email, username, password, null,null)
+            val email = binding.email.text.toString().trim()
+            val password = binding.password.text.toString().trim()
+            val username = binding.username.text.toString().trim()
+            if (email != "" && password != "" && username != ""){
+
+                val user = User(email, username, password, null, null)
+
                 var result: User? = null
                 runBlocking {
                     launch{
@@ -34,11 +36,16 @@ class RegisterActivity: AppCompatActivity(){
                     val menuIntent = android.content.Intent(this, MenuActivity::class.java)
                     menuIntent.putExtra("user", user)
                     startActivity(menuIntent)
+                } else{
+                    val snackbar = Snackbar.make(view, "there is already a user with this email", Snackbar.LENGTH_SHORT)
+                    snackbar.setTextColor(ContextCompat.getColor(this, R.color.error))
+                    snackbar.show()
                 }
+            } else {
+                val snackbar = Snackbar.make(view, "please fill in all the fields", Snackbar.LENGTH_SHORT)
+                snackbar.setTextColor(ContextCompat.getColor(this, R.color.error))
+                snackbar.show()
             }
-            val snackbar = Snackbar.make(view, "please fill in all the fields", Snackbar.LENGTH_SHORT)
-            snackbar.setTextColor(ContextCompat.getColor(this, R.color.error))
-            snackbar.show()
         }
     }
 }
