@@ -25,6 +25,7 @@ class RegisterActivity: AppCompatActivity(){
             if (email != "" && password != "" && username != ""){
 
                 val user = User(email, username, password, null, null)
+
                 var result: User? = null
                 runBlocking {
                     launch{

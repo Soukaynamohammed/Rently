@@ -10,6 +10,7 @@ class FireBaseCommunication {
     private val users = FirebaseFirestore.getInstance().collection("/users")
     private val items = FirebaseFirestore.getInstance().collection("/items")
     private val db = Firebase.firestore
+
     suspend fun writeNewUser(user: User) : User?{
         return if (getUser(user.getEmail()) == null){
             db.collection("users").document()
@@ -17,6 +18,7 @@ class FireBaseCommunication {
             user
         } else null
     }
+
     suspend fun getUser(email: String?): User? {
         if (email == null) return null
         try {
@@ -27,6 +29,7 @@ class FireBaseCommunication {
             val location = result.getGeoPoint("location")
             return User(email, result.get("username").toString(), result.get("password").toString(),
                 result.getGeoPoint("location"), result.getString("imageUrl") )
+
         } catch (e: Exception) {
             throw e
         }
@@ -44,4 +47,9 @@ class FireBaseCommunication {
 //            throw e
 //        }
 //    }
+
+    suspend fun changePassword(email: String?){
+
+
+    }
 }
