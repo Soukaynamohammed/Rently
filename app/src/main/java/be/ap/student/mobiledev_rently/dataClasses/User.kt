@@ -28,9 +28,9 @@ class User () : Parcelable{
     fun setEmail(email: String){this.email = email}
     fun setUsername(username: String){this.username = username}
     fun setPassword(password: String){this.password = password}
+    fun setLocation(location: GeoPoint ){this.location = location}
     fun getImageUrl(): String? { return imageUrl}
     fun setImageUrl(imageUrl: String) {this.imageUrl = imageUrl}
-    fun setLocation(location: GeoPoint){this.location = location}
     fun toMap(): Map<String, Any?>{
         return mapOf(
             "email" to email,
@@ -55,7 +55,7 @@ class User () : Parcelable{
             parcel.writeString(email)
             parcel.writeString(username)
             parcel.writeString(password)
-            if (location != null) {
+            if(location != null){
                 parcel.writeDouble(location!!.latitude)
                 parcel.writeDouble(location!!.longitude)
             } else {

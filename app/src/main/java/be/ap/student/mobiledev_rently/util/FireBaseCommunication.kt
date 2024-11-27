@@ -47,8 +47,18 @@ class FireBaseCommunication {
 //        }
 //    }
 
-    suspend fun changePassword(email: String?){
-
+    suspend fun updateUser(user: User, oldEmail: String){
+        try {
+            val task = users.whereEqualTo("email", oldEmail).get()
+            task.await()
+            if (task.result.size() == 0) return
+            val result = task.result.documents[0]
+            val id = result.id
+            users.document(id).set(user)
+            return
+        } catch (e: Exception) {
+            throw e
+        }
 
     }
 }
