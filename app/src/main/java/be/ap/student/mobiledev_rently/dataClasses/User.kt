@@ -28,9 +28,9 @@ class User () : Parcelable{
     fun setEmail(email: String){this.email = email}
     fun setUsername(username: String){this.username = username}
     fun setPassword(password: String){this.password = password}
-    fun setLocation(location: Map<String, String>?){this.location = location}
     fun getImageUrl(): String? { return imageUrl}
     fun setImageUrl(imageUrl: String) {this.imageUrl = imageUrl}
+    fun setLocation(location: GeoPoint){this.location = location}
     fun toMap(): Map<String, Any?>{
         return mapOf(
             "email" to email,
@@ -40,27 +40,22 @@ class User () : Parcelable{
             "imageUrl" to imageUrl
         )
     }
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(email)
-        parcel.writeString(username)
-        parcel.writeString(password)
-        parcel.writeString(imageUrl)
-    }
 
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<User> {
-        override fun createFromParcel(parcel: Parcel): User {
-            return User(parcel)
+    private companion object : Parceler<User> {
+        override fun create(parcel: Parcel): User {
+            val email = parcel.readString()
+            val username = parcel.readString()
+            val password = parcel.readString()
+            val location = GeoPoint(parcel.readDouble(), parcel.readDouble())
+            val imageUrl = parcel.readString()
+            return User(email, username, password, location, imageUrl)
         }
 
         override fun User.write(parcel: Parcel, flags: Int) {
             parcel.writeString(email)
             parcel.writeString(username)
             parcel.writeString(password)
-            if(location != null){
+            if (location != null) {
                 parcel.writeDouble(location!!.latitude)
                 parcel.writeDouble(location!!.longitude)
             } else {
