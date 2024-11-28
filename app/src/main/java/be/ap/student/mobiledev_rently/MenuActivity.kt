@@ -21,13 +21,11 @@ class MenuActivity : AppCompatActivity() {
         binding.bottomNavBar.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.navigation_search_item->{
-                    //TODO: replace fragment
-                    loadFragment(HomeFragment())
+                    loadFragment(SearchFragment())
                     true
                 }
                 R.id.navigation_message->{
-                    //TODO: replace fragment
-                    loadFragment(HomeFragment())
+                    loadFragment(MessagesFragment())
                     true
                 }
                 R.id.navigation_home->{
@@ -35,8 +33,7 @@ class MenuActivity : AppCompatActivity() {
                     true
                 }
                 R.id.navigation_my_items->{
-                    //TODO: replace fragment
-                    loadFragment(HomeFragment())
+                    loadFragment(MyItemsFragment())
                     true
                 }
                 R.id.navigation_profile->{
