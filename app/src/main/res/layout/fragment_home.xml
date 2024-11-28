@@ -19,21 +19,23 @@
             android:textStyle="bold"
             android:textColor="@color/black"
             android:text="@string/what_are_you_looking_for" />
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginRight="50dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/search_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/search_term"
-                android:textSize="28sp"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
+        <EditText
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="30dp"
+            android:id="@+id/search_item"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
+            android:background="#FFFFFF"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:textColor="@color/black"
+            android:paddingStart="20dp"
+            android:hint="@string/search_term"
+            android:textSize="23sp"/>
+
+
         <ListView
             android:id="@+id/list_view"
             android:layout_width="match_parent"

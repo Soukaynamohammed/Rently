@@ -1,0 +1,24 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Transparent Background -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" /> <!-- Transparent background -->
+        </shape>
+    </item>
+
+    <!-- Top Border -->
+    <item android:top="0dp">
+        <shape android:shape="rectangle">
+            <size android:height="5dp" /> <!-- Border thickness -->
+            <solid android:color="#000000" /> <!-- Border color (black) -->
+        </shape>
+    </item>
+
+    <!-- Bottom Border -->
+    <item android:bottom="0dp">
+        <shape android:shape="rectangle">
+            <size android:height="5dp" /> <!-- Border thickness -->
+            <solid android:color="#000000" /> <!-- Border color (black) -->
+        </shape>
+    </item>
+</layer-list>

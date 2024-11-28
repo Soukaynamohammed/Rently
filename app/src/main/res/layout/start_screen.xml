@@ -21,26 +21,26 @@
     <Button
         android:id="@+id/login"
         android:layout_width="300dp"
-        android:layout_height="100dp"
+        android:layout_height="72dp"
         android:layout_margin="10dp"
         android:backgroundTint="@color/button_background"
-        android:fontFamily="@font/inter_semibold"
+        android:fontFamily="sans-serif"
         android:text="@string/login"
         android:textColor="@color/button_text"
-        android:textSize="40sp"
+        android:textSize="33sp"
         app:cornerRadius="20dp" />
 
     <Button
         android:id="@+id/register"
         android:layout_width="300dp"
-        android:layout_height="100dp"
+        android:layout_height="72dp"
         android:layout_margin="10dp"
         android:layout_marginTop="200dp"
         android:backgroundTint="@color/button_background"
-        android:fontFamily="@font/inter_semibold"
+        android:fontFamily="sans-serif"
         android:text="@string/register"
         android:textColor="@color/button_text"
-        android:textSize="40sp"
+        android:textSize="33sp"
         app:cornerRadius="20dp" />
 </LinearLayout>
 

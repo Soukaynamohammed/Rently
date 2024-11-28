@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ChangeProfileFragment">
 
     <LinearLayout
@@ -17,7 +18,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/profileCard"
             android:layout_width="411dp"
-            android:layout_height="450dp"
+            android:layout_height="410dp"
             android:layout_margin="16dp"
             android:backgroundTint="#FFFFFF">
 
@@ -25,10 +26,9 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/profileCardBeige"
                 android:layout_width="411dp"
-                android:layout_height="250dp"
+                android:layout_height="225dp"
                 android:layout_marginTop="150dp"
                 android:backgroundTint="#ECE5DC">
-
 
 
 
@@ -36,55 +36,72 @@
                     android:id="@+id/username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="20dp"
-                    android:text="@string/username" />
+                    android:layout_marginBottom="50dp"
+                    android:text="@string/username"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-                <com.google.android.material.textfield.TextInputLayout
+                <EditText
                     android:layout_marginLeft="35dp"
                     android:layout_marginRight="50dp"
-                    android:layout_marginTop="50dp"
+                    android:layout_marginTop="60dp"
+                    android:id="@+id/usernameValue2"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"
+                    android:background="#FFFFFF"
+                    app:boxBackgroundMode="filled"
+                    app:boxBackgroundColor="@color/white"
+                    app:boxStrokeColor="@color/black"
+                    app:boxCornerRadiusTopStart="10dp"
+                    app:boxCornerRadiusTopEnd="10dp"
+                    app:boxCornerRadiusBottomStart="10dp"
+                    app:boxCornerRadiusBottomEnd="10dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="38dp"
+                    android:textColor="@color/black"
+                    android:hint="@string/username"
+                    android:paddingStart="20dp"
+                    android:textSize="18sp"/>
 
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/usernameValue2"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:hint="@string/username"
-                        android:textSize="20sp" />
-
-
-                </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:id="@+id/Email"
+                    android:layout_marginTop="110dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:layout_marginLeft="30dp"
-                    android:layout_marginTop="120dp"
-                    android:text="Email" />
+                    android:layout_marginBottom="50dp"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:text="@string/email"
+                    />
 
-                <com.google.android.material.textfield.TextInputLayout
+
+                <EditText
                     android:layout_marginLeft="35dp"
                     android:layout_marginRight="50dp"
                     android:layout_marginTop="150dp"
+                    android:id="@+id/emailValue2"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"
+                    android:background="#FFFFFF"
+                    app:boxBackgroundMode="filled"
+                    app:boxBackgroundColor="@color/white"
+                    app:boxStrokeColor="@color/black"
+                    app:boxCornerRadiusTopStart="10dp"
+                    app:boxCornerRadiusTopEnd="10dp"
+                    app:boxCornerRadiusBottomStart="10dp"
+                    app:boxCornerRadiusBottomEnd="10dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/emailValue2"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:hint="@string/email"
-                        android:textSize="20sp" />
-
-
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_height="38dp"
+                    android:textColor="@color/black"
+                    android:paddingStart="20dp"
+                    android:hint="@string/email"
+                    android:textSize="18sp"/>
 
 
 
@@ -104,17 +121,21 @@
 
         </androidx.cardview.widget.CardView>
 
+
         <Button
             android:id="@+id/saveButton"
             android:layout_width="300dp"
-            android:layout_height="70dp"
+            android:layout_height="60dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
-            android:backgroundTint="@color/black"
-            android:fontFamily="@font/inter_semibold"
+            android:backgroundTint="@color/button_background"
+            android:fontFamily="sans-serif"
+            android:textColor="@color/button_text"
+            android:textSize="25sp"
             android:text="@string/save"
-            android:textSize="30sp"     />
+            app:cornerRadius="5dp"
+            />
 
 
     </LinearLayout>

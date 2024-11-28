@@ -7,10 +7,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="button_text">#F8CF9C</color>
-    <color name="background">#F3910E</color>
-    <color name="background_secondary">#F8B55D</color>
-    <color name="button_background">#CD5525</color>
-    <color name="text">#94590A</color>
+    <color name="button_text">#FFFFFFFF</color>
+    <color name="background">#89A8C5</color>
+    <color name="background_secondary">#ECE5DC</color>
+    <color name="button_background">#FF000000</color>
+    <color name="text">#FF000000</color>
     <color name="error">#ff3333</color>
 </resources>

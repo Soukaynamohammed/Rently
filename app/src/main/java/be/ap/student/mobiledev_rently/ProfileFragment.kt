@@ -53,24 +53,26 @@ class ProfileFragment : Fragment() {
 
         editButton.setOnClickListener {
             user?.let {
-//                Toast.makeText(requireContext(), "Edit button clicked", Toast.LENGTH_SHORT).show()
-                val fragment = ChangeProfileFragment.newInstance(it)
+
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.container, fragment)
+                    .add(R.id.container, ChangeProfileFragment.newInstance(it))
                     .addToBackStack(null)
                     .commit()
+
+
             }
         }
 
         changePassButton.setOnClickListener{
             user?.let {
-                Toast.makeText(requireContext(), "Change password button clicked", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(requireContext(), "Change password button clicked", Toast.LENGTH_SHORT).show()
 
-                val fragment = ChangePasswordFragment.newInstance(it);
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.container, fragment)
+                    .add(R.id.container, ChangePasswordFragment.newInstance(it))
                     .addToBackStack(null)
                     .commit()
+
+
             }
         }
 

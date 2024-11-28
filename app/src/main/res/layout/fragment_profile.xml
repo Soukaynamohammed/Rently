@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ProfileFragment">
 
     <LinearLayout
@@ -18,7 +19,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/profileCard"
             android:layout_width="411dp"
-            android:layout_height="450dp"
+            android:layout_height="410dp"
             android:layout_margin="16dp"
             android:backgroundTint="#FFFFFF">
 
@@ -26,7 +27,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/profileCardBeige"
                 android:layout_width="411dp"
-                android:layout_height="250dp"
+                android:layout_height="230dp"
                 android:layout_marginTop="150dp"
                 android:backgroundTint="#ECE5DC">
 
@@ -38,7 +39,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
                     android:textStyle="bold"
+                    android:textColor="@color/black"
                     android:layout_marginTop="10dp"
+                    android:textSize="20sp"
                     android:text="Username" />
 
                 <TextView
@@ -47,6 +50,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="40dp"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+
                     android:text="" />
 
                 <TextView
@@ -54,6 +60,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="80dp"
                     android:text="Email" />
@@ -64,6 +72,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="120dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
                     android:text="" />
 
                 <Button
@@ -74,7 +84,6 @@
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="160dp"
                     android:text="@string/changePassword"
-
                     >
 
                 </Button>
@@ -96,15 +105,17 @@
         <Button
             android:id="@+id/edit"
             android:layout_width="300dp"
-            android:layout_height="70dp"
+            android:layout_height="60dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
             android:backgroundTint="@color/button_background"
-            android:fontFamily="@font/inter_semibold"
+            android:fontFamily="sans-serif"
             android:text="@string/Edit"
             android:textColor="@color/button_text"
-            android:textSize="30sp"     />
+            android:textSize="25sp"
+            app:cornerRadius="5dp"
+            />
 
 
     </LinearLayout>
