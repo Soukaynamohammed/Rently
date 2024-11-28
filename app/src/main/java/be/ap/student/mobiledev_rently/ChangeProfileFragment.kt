@@ -13,6 +13,9 @@ import androidx.activity.result.contract.ActivityResultContract
 import be.ap.student.mobiledev_rently.dataClasses.User
 import be.ap.student.mobiledev_rently.databinding.FragmentChangeProfileBinding
 import androidx.activity.result.contract.ActivityResultContracts
+import be.ap.student.mobiledev_rently.util.FireBaseCommunication
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 
 /**
@@ -67,9 +70,19 @@ class ChangeProfileFragment : Fragment() {
 
         saveButton.setOnClickListener {
             user?.let {
+
+                val oldEmail: String? = it.getEmail();
+
                 it.setUsername(nameEditText.text.toString())
                 it.setEmail(emailEditText.text.toString())
                 it.setImageUrl(imageUrl.sourceLayoutResId.toString())
+
+
+                runBlocking {
+                    launch {
+                        FireBaseCommunication().updateUser(it, oldEmail)
+                    }.join()
+                }
             }
 
             val profileFragment = ProfileFragment.newInstance(user)

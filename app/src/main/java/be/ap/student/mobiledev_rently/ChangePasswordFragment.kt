@@ -12,6 +12,9 @@ import androidx.core.content.ContextCompat
 import be.ap.student.mobiledev_rently.dataClasses.User
 import be.ap.student.mobiledev_rently.databinding.FragmentChangePasswordBinding
 import be.ap.student.mobiledev_rently.databinding.FragmentProfileBinding
+import be.ap.student.mobiledev_rently.util.FireBaseCommunication
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 /**
  * A simple [Fragment] subclass.
@@ -44,6 +47,12 @@ class ChangePasswordFragment : Fragment() {
             user?.let {
                 if (password.text.toString() == repeatPassword.text.toString()){
                     it.setPassword(password.text.toString())
+
+                    runBlocking {
+                        launch {
+                            FireBaseCommunication().updateUser(it, it.getEmail())
+                        }.join()
+                    }
 
                     val profileFragment = ProfileFragment.newInstance(user)
                     parentFragmentManager.beginTransaction()

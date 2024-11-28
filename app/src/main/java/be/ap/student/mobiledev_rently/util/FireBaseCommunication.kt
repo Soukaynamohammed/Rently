@@ -47,7 +47,7 @@ class FireBaseCommunication {
 //        }
 //    }
 
-    suspend fun updateUser(user: User, oldEmail: String){
+    suspend fun updateUser(user: User, oldEmail: String?){
         try {
             val task = users.whereEqualTo("email", oldEmail).get()
             task.await()
