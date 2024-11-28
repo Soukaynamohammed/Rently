@@ -101,6 +101,7 @@
             android:background="#FFFFFF"
             app:boxBackgroundMode="filled"
             app:boxBackgroundColor="@color/white"
+            android:inputType="textPassword"
             app:boxStrokeColor="@color/black"
             app:boxCornerRadiusTopStart="10dp"
             app:boxCornerRadiusTopEnd="10dp"
