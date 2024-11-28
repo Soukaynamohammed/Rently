@@ -2,6 +2,7 @@ package be.ap.student.mobiledev_rently
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,8 @@ import be.ap.student.mobiledev_rently.dataClasses.User
 import be.ap.student.mobiledev_rently.databinding.FragmentChangeProfileBinding
 import androidx.activity.result.contract.ActivityResultContracts
 import be.ap.student.mobiledev_rently.util.FireBaseCommunication
+import com.google.firebase.Firebase
+import com.google.firebase.storage.storage
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -27,6 +30,7 @@ class ChangeProfileFragment : Fragment() {
     private var user: User? = null
     private lateinit var binding: FragmentChangeProfileBinding
     private var selectedImageUri: Uri? = null
+    private val storageRef = Firebase.storage.reference
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +53,7 @@ class ChangeProfileFragment : Fragment() {
         val saveButton:  Button = binding.saveButton
         val imageUrl: ImageView = binding.imageView;
         val imageView: ImageView = binding.imageView
+        val changeImageButton: Button = binding.changeProfilePicButton
 
         user?.let {
             nameEditText.setText(it.getUsername())
@@ -64,7 +69,7 @@ class ChangeProfileFragment : Fragment() {
             }
         }
 
-        imageView.setOnClickListener {
+        changeImageButton.setOnClickListener {
             pickImageLauncher.launch("image/*")
         }
 
@@ -77,12 +82,15 @@ class ChangeProfileFragment : Fragment() {
                 it.setEmail(emailEditText.text.toString())
                 it.setImageUrl(imageUrl.sourceLayoutResId.toString())
 
-
-                runBlocking {
-                    launch {
-                        FireBaseCommunication().updateUser(it, oldEmail)
-                    }.join()
+                selectedImageUri?.let { uri ->
+                    uploadImageToFirebase(uri) { imageUrl ->
+                        it.setImageUrl(imageUrl)
+                        updateUserInFirebase(it, oldEmail)
+                    }
+                } ?: run {
+                    updateUserInFirebase(it, oldEmail)
                 }
+
             }
 
             val profileFragment = ProfileFragment.newInstance(user)
@@ -95,6 +103,42 @@ class ChangeProfileFragment : Fragment() {
 
         return view;
     }
+
+    // Upload Image to Firebase
+    private fun uploadImageToFirebase(uri: Uri, callback: (String) -> Unit) {
+        val fileName = "profile_images/${System.currentTimeMillis()}.jpg"
+        val fileRef = storageRef.child(fileName)
+
+        fileRef.putFile(uri)
+            .addOnSuccessListener {
+                Log.d("FirebaseUpload", "Image upload successful: $fileName")
+                fileRef.downloadUrl.addOnSuccessListener { downloadUri ->
+                    Log.d("FirebaseUpload", "Download URL: $downloadUri")
+                    callback(downloadUri.toString())
+                }.addOnFailureListener { exception ->
+                    Log.e("FirebaseUpload", "Failed to get download URL: ${exception.message}")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("FirebaseUpload", "Image upload failed: ${exception.message}")
+            }
+    }
+
+
+    private fun updateUserInFirebase(user: User, oldEmail: String?) {
+        runBlocking {
+            launch {
+                FireBaseCommunication().updateUser(user, oldEmail)
+            }.join()
+        }
+
+        val profileFragment = ProfileFragment.newInstance(user)
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.container, profileFragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
 
 
     companion object {
