@@ -26,6 +26,7 @@ class RegisterActivity: AppCompatActivity(){
 
                 val user = User(email, username, password, null, null)
                 var result: User? = null
+                user.encrypt()
                 runBlocking {
                     launch{
                         result = FireBaseCommunication().writeNewUser(user)

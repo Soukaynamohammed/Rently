@@ -5,6 +5,7 @@ import android.os.Parcelable
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
+import java.security.MessageDigest
 
 @Parcelize
 class User () : Parcelable{
@@ -28,9 +29,12 @@ class User () : Parcelable{
     fun setEmail(email: String){this.email = email}
     fun setUsername(username: String){this.username = username}
     fun setPassword(password: String){this.password = password}
-    fun setLocation(location: GeoPoint ){this.location = location}
     fun getImageUrl(): String? { return imageUrl}
     fun setImageUrl(imageUrl: String) {this.imageUrl = imageUrl}
+    fun setLocation(location: GeoPoint){this.location = location}
+    fun encrypt(){
+        password = md5(password)
+    }
     fun toMap(): Map<String, Any?>{
         return mapOf(
             "email" to email,
@@ -41,7 +45,7 @@ class User () : Parcelable{
         )
     }
 
-    private companion object : Parceler<User> {
+    companion object : Parceler<User> {
         override fun create(parcel: Parcel): User {
             val email = parcel.readString()
             val username = parcel.readString()
@@ -63,6 +67,12 @@ class User () : Parcelable{
                 parcel.writeDouble(0.0)
             }
             parcel.writeString(imageUrl)
+        }
+        @OptIn(ExperimentalStdlibApi::class)
+        fun md5(string: String?): String {
+            val md = MessageDigest.getInstance("MD5")
+            val digest = md.digest(string?.toByteArray()!!)
+            return digest.joinToString("") {"%02x".format(it) }
         }
     }
 }
