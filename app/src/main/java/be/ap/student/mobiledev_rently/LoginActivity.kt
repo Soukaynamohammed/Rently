@@ -28,7 +28,7 @@ class LoginActivity: AppCompatActivity(){
                         user = FireBaseCommunication().getUser(email)
                     }.join()
                 }
-                if(user?.getPassword() == password){
+                if(user?.getPassword() == User.md5(password)){
                     val menuIntent = android.content.Intent(this, MenuActivity::class.java)
                     menuIntent.putExtra("user", user)
                     startActivity(menuIntent)
