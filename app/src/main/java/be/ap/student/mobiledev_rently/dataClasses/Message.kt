@@ -13,15 +13,19 @@ class Message() : Parcelable {
         this.message = message
         this.sender = sender
     }
+    @JvmName("getMessageMethod")
     fun getMessage(): String?{
         return message
     }
+    @JvmName("setMessageMethod")
     fun setMessage(message: String){
         this.message = message
     }
+    @JvmName("getSenderMethod")
     fun getSender(): String?{
         return sender
     }
+    @JvmName("setSenderMethod")
     fun setSender(sender: String){
         this.sender = sender
     }
