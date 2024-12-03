@@ -35,15 +35,6 @@ class User () : Parcelable{
     fun encrypt(){
         password = md5(password)
     }
-    fun toMap(): Map<String, Any?>{
-        return mapOf(
-            "email" to email,
-            "username" to username,
-            "password" to password,
-            "location" to location,
-            "imageUrl" to imageUrl
-        )
-    }
 
     companion object : Parceler<User> {
         override fun create(parcel: Parcel): User {
