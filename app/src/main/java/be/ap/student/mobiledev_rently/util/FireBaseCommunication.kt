@@ -1,4 +1,6 @@
 package be.ap.student.mobiledev_rently.util
+import android.net.Uri
+import com.google.firebase.storage.*
 import be.ap.student.mobiledev_rently.dataClasses.User
 import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
@@ -6,6 +8,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
+import org.osmdroid.tileprovider.util.StorageUtils.getStorage
 
 
 class FireBaseCommunication {
@@ -59,6 +62,20 @@ class FireBaseCommunication {
         } catch (e: Exception) {
             throw e
         }
-
     }
+    suspend fun getImage(downloadPath: String): String? {
+        return try {
+            // Get a reference to the file in Firebase Storage
+            val fileRef = FirebaseStorage.getInstance().reference.child(downloadPath)
+
+            // Fetch the download URL (this suspends until the URL is retrieved)
+            val url = fileRef.downloadUrl.await()
+            url.toString() // Return the download URL as a string
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null // Return null if an error occurs
+        }
+    }
+
+
 }

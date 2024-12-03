@@ -20,7 +20,7 @@
             android:layout_height="50dp"
             android:layout_marginEnd="8dp"
             android:contentDescription="Item image"
-            android:src="@drawable/item_placeholder"
+            android:src="@drawable/default_character"
 
             />
 
