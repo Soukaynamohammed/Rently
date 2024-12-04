@@ -1,4 +1,5 @@
 package be.ap.student.mobiledev_rently.util
+import android.util.Log
 import be.ap.student.mobiledev_rently.dataClasses.Booking
 import be.ap.student.mobiledev_rently.dataClasses.Item
 import be.ap.student.mobiledev_rently.dataClasses.User
@@ -117,16 +118,28 @@ class FireBaseCommunication {
     }
     suspend fun getItemsByUser(userId: String): List<Item> {
         try {
-            val task = items.whereEqualTo("owner", "users/${userId}").get()
+            val task = items.whereEqualTo("owner", "/users/${userId}").get()
             task.await()
             val items = LinkedList<Item>()
             if (task.result.size() == 0) return items
             for(item in task.result) {
+                Log.e("Items", "test")
+                var startDate: LocalDate?
+                if (item.getString("startDate") == ""){
+                    startDate = null
+                } else {
+                    startDate = LocalDate.parse(item.getString("endDate"))
+                }
+                var endDate: LocalDate?
+                if (item.getString("endDate") == ""){
+                    endDate = null
+                } else {
+                    endDate = LocalDate.parse(item.getString("endDate"))
+                }
                 items.add(Item(item.getString("title"), item.getString("category"),
                     item.getString("description"), item.getString("image"),
                     item.getGeoPoint("location"), item.getString("owner"),
-                    item.getDouble("price"), LocalDate.parse(item.getString("startDate")),
-                    LocalDate.parse(item.getString("endDate"))))
+                    item.getDouble("price"), startDate, endDate))
             }
             return items
         } catch (e: Exception) {

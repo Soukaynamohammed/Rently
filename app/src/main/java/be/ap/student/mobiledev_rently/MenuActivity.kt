@@ -21,7 +21,8 @@ class MenuActivity : AppCompatActivity() {
         binding.bottomNavBar.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.navigation_search_item->{
-                    loadFragment(SearchFragment())
+                    val searchFragment = SearchFragment.newInstance(user)
+                    loadFragment(searchFragment)
                     true
                 }
                 R.id.navigation_message->{
