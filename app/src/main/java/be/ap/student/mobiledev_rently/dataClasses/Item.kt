@@ -5,7 +5,6 @@ import android.os.Parcelable
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
-import java.time.LocalDate
 
 @Parcelize
 class Item() : Parcelable {
@@ -16,9 +15,9 @@ class Item() : Parcelable {
     private var location: GeoPoint? = null
     private var owner: String? = null
     private var price: Double? = null
-    private var startDate: LocalDate? = null
-    private var endDate: LocalDate? = null
-    constructor(title: String?, category: String?, description: String?, image: String?, location: GeoPoint?, owner: String?, price: Double?, startDate: LocalDate?, endDate: LocalDate?) : this() {
+    private var startDate: String = ""
+    private var endDate: String = ""
+    constructor(title: String?, category: String?, description: String?, image: String?, location: GeoPoint?, owner: String?, price: Double?, startDate: String, endDate: String) : this() {
         this.title = title
         this.category = category
         this.description = description
@@ -71,16 +70,16 @@ class Item() : Parcelable {
     fun setPrice(price: Double) {
         this.price = price
     }
-    fun getStartDate(): LocalDate? {
+    fun getStartDate(): String? {
         return startDate
     }
-    fun setStartDate(startDate: LocalDate){
+    fun setStartDate(startDate: String){
         this.startDate = startDate
     }
-    fun getEndDate(): LocalDate? {
+    fun getEndDate(): String? {
         return endDate
     }
-    fun setEndDate(endDate: LocalDate){
+    fun setEndDate(endDate: String){
         this.endDate = endDate
     }
 
@@ -93,8 +92,8 @@ class Item() : Parcelable {
             val location = GeoPoint(parcel.readDouble(), parcel.readDouble())
             val owner = parcel.readString()
             val price = parcel.readDouble()
-            val startDate = LocalDate.parse(parcel.readString())
-            val endDate = LocalDate.parse(parcel.readString())
+            val startDate = parcel.readString()?:""
+            val endDate = parcel.readString()?:""
             return Item(title, category, description, image, location, owner, price, startDate, endDate)
         }
 
@@ -112,8 +111,8 @@ class Item() : Parcelable {
             }
             parcel.writeString(owner)
             price?.let { parcel.writeDouble(it) }
-            parcel.writeString(startDate.toString())
-            parcel.writeString(endDate.toString())
+            parcel.writeString(startDate)
+            parcel.writeString(endDate)
         }
 
     }

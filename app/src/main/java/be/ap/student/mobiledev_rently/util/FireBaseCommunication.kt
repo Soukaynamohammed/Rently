@@ -1,7 +1,5 @@
 package be.ap.student.mobiledev_rently.util
-import android.net.Uri
 import android.util.Log
-import com.google.firebase.storage.*
 import be.ap.student.mobiledev_rently.dataClasses.Booking
 import be.ap.student.mobiledev_rently.dataClasses.Item
 import be.ap.student.mobiledev_rently.dataClasses.User
@@ -76,8 +74,8 @@ class FireBaseCommunication {
             return Item(result.getString("title"), result.getString("category"),
                 result.getString("description"), result.getString("image"),
                 result.getGeoPoint("location"), result.getString("owner") ,
-                result.getDouble("price"), LocalDate.parse(result.getString("startDate")),
-                LocalDate.parse(result.getString("endDate")))
+                result.getDouble("price"), result.getString("startDate")?:"" ,
+                result.getString("endDate")?:"")
         } catch (e: Exception) {
             throw e
         }
@@ -93,8 +91,8 @@ class FireBaseCommunication {
                 items.add(Item(item.getString("title"), item.getString("category"),
                     item.getString("description"), item.getString("image"),
                     item.getGeoPoint("location"), item.getString("owner"),
-                    item.getDouble("price"), LocalDate.parse(item.getString("startDate")),
-                    LocalDate.parse(item.getString("endDate"))))
+                    item.getDouble("price"), item.getString("startDate")?:"",
+                    item.getString("endDate")?:""))
             }
             return items
         } catch (e: Exception) {
@@ -111,8 +109,8 @@ class FireBaseCommunication {
                 items.add(Item(item.getString("title"), item.getString("category"),
                     item.getString("description"), item.getString("image"),
                     item.getGeoPoint("location"), item.getString("owner") ,
-                    item.getDouble("price"), LocalDate.parse(item.getString("startDate")),
-                    LocalDate.parse(item.getString("endDate"))))
+                    item.getDouble("price"), item.getString("startDate")?:"",
+                    item.getString("endDate")?:""))
             }
             return items
         } catch (e: Exception) {
@@ -128,18 +126,8 @@ class FireBaseCommunication {
             if (task.result.size() == 0) return items
             for(item in task.result) {
                 Log.e("Items", "test")
-                var startDate: LocalDate?
-                if (item.getString("startDate") == ""){
-                    startDate = null
-                } else {
-                    startDate = LocalDate.parse(item.getString("endDate"))
-                }
-                var endDate: LocalDate?
-                if (item.getString("endDate") == ""){
-                    endDate = null
-                } else {
-                    endDate = LocalDate.parse(item.getString("endDate"))
-                }
+                val startDate= item.getString("startDate")?:""
+                val endDate= item.getString("endDate")?:""
                 items.add(Item(item.getString("title"), item.getString("category"),
                     item.getString("description"), item.getString("image"),
                     item.getGeoPoint("location"), item.getString("owner"),

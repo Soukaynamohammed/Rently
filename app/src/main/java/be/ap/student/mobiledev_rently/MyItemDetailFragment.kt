@@ -13,8 +13,11 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import be.ap.student.mobiledev_rently.dataClasses.Item
 import be.ap.student.mobiledev_rently.databinding.FragmentMyItemDetailBinding
+import be.ap.student.mobiledev_rently.util.FireBaseCommunication
 import com.bumptech.glide.Glide
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.Calendar
@@ -90,13 +93,19 @@ class MyItemDetailFragment : Fragment() {
                         val selectedDate = Calendar.getInstance()
                         // Set the selected date using the values received from the DatePicker dialog
                         selectedDate.set(year, monthOfYear, dayOfMonth)
-                        // Create a SimpleDateFormat to format the date as "dd/MM/yyyy"
-                        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                         // Format the selected date into a string
-                        item?.setStartDate(LocalDate.parse(dateFormat.format(selectedDate.time)))
-                        val formattedDate = dateFormat.format(selectedDate.time)
+                        var itemId: String? = null
+                        runBlocking {
+                            launch {
+                                itemId = item?.let { it2 -> FireBaseCommunication().getItemId(it2) }
+                            }
+                                .join()
+                        }
+
+                        item?.setStartDate(LocalDate.of(year, monthOfYear, dayOfMonth).toString())
+                        itemId?.let { it2 -> FireBaseCommunication().updateItem(item!!, it2) }
                         // Update the TextView to display the selected date with the "Selected Date: " prefix
-                        startDate.text = formattedDate
+                        startDate.text = item?.getStartDate().toString()
                     },
                     calendar.get(Calendar.YEAR),
                     calendar.get(Calendar.MONTH),
@@ -118,10 +127,18 @@ class MyItemDetailFragment : Fragment() {
                         // Create a SimpleDateFormat to format the date as "dd/MM/yyyy"
                         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                         // Format the selected date into a string
-                        item?.setStartDate(LocalDate.parse(dateFormat.format(selectedDate.time)))
-                        val formattedDate = dateFormat.format(selectedDate.time)
+                        var itemId: String? = null
+                        runBlocking {
+                            launch {
+                                itemId = item?.let { it2 -> FireBaseCommunication().getItemId(it2) }
+                            }
+                                .join()
+                        }
+
+                        item?.setEndDate(LocalDate.of(year, monthOfYear, dayOfMonth).toString())
+                        itemId?.let { it2 -> FireBaseCommunication().updateItem(item!!, it2) }
                         // Update the TextView to display the selected date with the "Selected Date: " prefix
-                        endDate.text = formattedDate
+                        endDate.text = item?.getEndDate().toString()
                     },
                     calendar.get(Calendar.YEAR),
                     calendar.get(Calendar.MONTH),
