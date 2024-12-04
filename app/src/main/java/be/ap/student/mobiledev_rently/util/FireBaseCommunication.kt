@@ -151,11 +151,13 @@ class FireBaseCommunication {
             .set(item)
         return item
     }
+
     fun writeNewItem(item: Item): Item{
         db.collection("items").document()
             .set(item)
         return item
     }
+
     suspend fun getBookingsYourItems(userId: String): List<Booking>{
         try {
             val task = bookings.whereEqualTo("owner", "users/${userId}").get()

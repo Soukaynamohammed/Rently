@@ -53,17 +53,7 @@ class MyItemDetailEditFragment : Fragment() {
         val description: TextView = binding.description
         val saveButton: Button = binding.save
         var itemId: String? = null
-
-        if (item?.getImage()!!.isNotEmpty())
-        {
-            val imageRef = FirebaseStorage.getInstance().getReferenceFromUrl(item?.getImage()!!)
-            imageRef.getBytes(10 * 1024 * 1024).addOnSuccessListener {
-                val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
-                imageView.setImageBitmap(bitmap)
-            }.addOnFailureListener {
-                // todo Handle any errors
-            }
-        }
+        val changePictureButton: Button = binding.changePicturePicButton
 
 
         item?.let {
@@ -81,25 +71,51 @@ class MyItemDetailEditFragment : Fragment() {
                 loadImageFromFirebase(it.getImage()!!, imageView)
                 Glide.with(this)
                     .load(it.getImage())
-                    .placeholder(R.drawable.default_character)
+                    .placeholder(R.drawable.default_item)
                     .into(imageView)
             }
             else{
-                imageView.setImageResource(R.drawable.default_character)
+                imageView.setImageResource(R.drawable.default_item)
             }
         }
-        imageView.setOnClickListener {
-            val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-                uri?.let {
-                    imageView.setImageURI(it)
-                    uploadImage(it)
-                }
+
+        val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let {
+                imageView.setImageURI(it)
+                uploadImage(it)
             }
+        }
+
+        changePictureButton.setOnClickListener {
             pickImageLauncher.launch("image/*")
         }
+
+
         saveButton.setOnClickListener {
-            itemId?.let { it1 -> FireBaseCommunication().updateItem(item!!, it1) }
+            val updatedTitle = title.text.toString()
+            val updatedPrice = price.text.toString().toDoubleOrNull() ?: 0.0 // Handle invalid input gracefully
+            val updatedCategory = category.text.toString()
+            val updatedDescription = description.text.toString()
+
+            item?.apply {
+                setTitle(updatedTitle)
+                setPrice(updatedPrice)
+                setCategory(updatedCategory)
+                setDescription(updatedDescription)
+            }
+
+            itemId?.let { it1 ->
+                FireBaseCommunication().updateItem(item!!, it1)
+
+                val updatedItemDetailFragment = MyItemDetailFragment.newInstance(item!!)
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.container, updatedItemDetailFragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
         }
+
+        //todo : add location permissions or someting
 
         return view
     }

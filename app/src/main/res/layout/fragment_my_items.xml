@@ -4,7 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".MyItemsFragment">
+    tools:context=".MyItemsFragment"
+    >
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewMyItems"
@@ -12,6 +17,9 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:padding="8dp" />
+    </androidx.core.widget.NestedScrollView>
+
+
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -125,7 +125,7 @@
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:layout_marginTop="20dp"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:text="@string/from" />
                 <TextView
                     android:id="@+id/startDate"
@@ -135,7 +135,7 @@
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:layout_marginTop="20dp"
-                    android:textSize="20sp"
+                    android:textSize="17sp"
                     android:text="@string/date"
                     />
                 <Button
@@ -162,7 +162,7 @@
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:layout_marginTop="20dp"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:background="@color/white"
                     android:text="@string/until" />
                 <TextView
@@ -173,7 +173,7 @@
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:layout_marginTop="20dp"
-                    android:textSize="20sp"
+                    android:textSize="17sp"
                     android:text="@string/date"
                     />
                 <Button
