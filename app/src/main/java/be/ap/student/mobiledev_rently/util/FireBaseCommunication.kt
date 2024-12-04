@@ -1,5 +1,7 @@
 package be.ap.student.mobiledev_rently.util
+import android.net.Uri
 import android.util.Log
+import com.google.firebase.storage.*
 import be.ap.student.mobiledev_rently.dataClasses.Booking
 import be.ap.student.mobiledev_rently.dataClasses.Item
 import be.ap.student.mobiledev_rently.dataClasses.User
@@ -80,6 +82,7 @@ class FireBaseCommunication {
             throw e
         }
     }
+
     suspend fun getItems(): List<Item> {
         try {
             val task = items.get()
@@ -119,6 +122,7 @@ class FireBaseCommunication {
     suspend fun getItemsByUser(userId: String): List<Item> {
         try {
             val task = items.whereEqualTo("owner", "/users/${userId}").get()
+
             task.await()
             val items = LinkedList<Item>()
             if (task.result.size() == 0) return items
@@ -182,6 +186,7 @@ class FireBaseCommunication {
             throw e
         }
     }
+
     suspend fun getImage(downloadPath: String): String? {
         return try {
             // Get a reference to the file in Firebase Storage

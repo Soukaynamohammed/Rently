@@ -67,7 +67,6 @@ class MyItemsFragment : Fragment() {
     private fun loadUserItems(userId: String) {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                Log.d("itemlist", "Startt")
                 val items = firebaseCommunication.getItemsByUser(userId)
                 Log.d("itemlist", items.toString())
                 myItemsAdapter.submitList(items)
@@ -80,12 +79,13 @@ class MyItemsFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(user: User?) =
-            MyItemsFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable("user", user)
-                }
-            }
+        fun newInstance(user: User?): MyItemsFragment {
+            val fragment = MyItemsFragment()
+            val args = Bundle()
+            args.putParcelable("user", user)
+            fragment.arguments = args
+            return fragment
+        }
     }
 
 }

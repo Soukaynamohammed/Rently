@@ -4,10 +4,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import be.ap.student.mobiledev_rently.R
 import be.ap.student.mobiledev_rently.dataClasses.Item
 import be.ap.student.mobiledev_rently.databinding.FragmentMyItemsBinding
 import be.ap.student.mobiledev_rently.databinding.SingleItemMyItemsBinding
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 class MyItemsAdapter : RecyclerView.Adapter<MyItemsAdapter.MyItemsViewHolder>() {
 
@@ -40,9 +42,20 @@ class MyItemsAdapter : RecyclerView.Adapter<MyItemsAdapter.MyItemsViewHolder>() 
             binding.itemName.text = item.getTitle()
             binding.itemPrice.text = "Price: $${item.getPrice()}"
 
-            Glide.with(binding.itemImage.context)
-                .load(item.getImage())
-                .into(binding.itemImage)
+            val imageUrl = item.getImage()
+            if (imageUrl.isNullOrEmpty()) {
+                Glide.with(binding.itemImage.context)
+                    .load(R.drawable.default_item)
+                    .skipMemoryCache(true) // Skip memory cache
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .into(binding.itemImage)
+            } else {
+                Glide.with(binding.itemImage.context)
+                    .load(imageUrl)
+                    .skipMemoryCache(true) // Skip memory cache
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .into(binding.itemImage)
+            }
         }
     }
 }
