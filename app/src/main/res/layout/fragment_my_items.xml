@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context=".MyItemsFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MyItemsFragment">
 
 <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/recyclerViewMyItems"
@@ -11,5 +12,17 @@ tools:context=".MyItemsFragment">
     android:layout_height="match_parent"
     android:clipToPadding="false"
     android:padding="8dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="30dp"
+        android:contentDescription="Add Item"
+        android:src="@drawable/add_button"
+        app:backgroundTint="@color/button_background"
+        app:tint="@color/white"
+    />
 
 </FrameLayout>
