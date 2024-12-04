@@ -1,6 +1,4 @@
 package be.ap.student.mobiledev_rently.util
-import android.net.Uri
-import com.google.firebase.storage.*
 import be.ap.student.mobiledev_rently.dataClasses.Booking
 import be.ap.student.mobiledev_rently.dataClasses.Item
 import be.ap.student.mobiledev_rently.dataClasses.User
@@ -8,8 +6,8 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.getField
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
-import org.osmdroid.tileprovider.util.StorageUtils.getStorage
 import java.time.LocalDate
 import java.util.LinkedList
 
@@ -24,6 +22,19 @@ class FireBaseCommunication {
             .set(user)
         return user
     }
+
+    suspend fun getUserID(email: String): String? {
+        try {
+            val task = users.whereEqualTo("email", email).get()
+            task.await()
+            if (task.result.size() == 0) return null
+            val result = task.result.documents[0]
+            return result.id
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
     suspend fun getUser(email: String?): User? {
         if (email == null) return null
         try {
@@ -61,26 +72,13 @@ class FireBaseCommunication {
             val result = task.result
             return Item(result.getString("title"), result.getString("category"),
                 result.getString("description"), result.getString("image"),
-                result.getGeoPoint("location"), result.getString("ownerReference"),
-                result.getDouble("price")
-                )
+                result.getGeoPoint("location"), result.getString("owner") ,
+                result.getDouble("price"), LocalDate.parse(result.getString("startDate")),
+                LocalDate.parse(result.getString("endDate")))
         } catch (e: Exception) {
             throw e
         }
     }
-
-    suspend fun getUserID(email: String): String? {
-        try {
-            val task = users.whereEqualTo("email", email).get()
-            task.await()
-            if (task.result.size() == 0) return null
-            val result = task.result.documents[0]
-            return result.id
-        } catch (e: Exception) {
-            throw e
-        }
-    }
-
     suspend fun getItems(): List<Item> {
         try {
             val task = items.get()
@@ -90,9 +88,9 @@ class FireBaseCommunication {
             for(item in task.result) {
                 items.add(Item(item.getString("title"), item.getString("category"),
                     item.getString("description"), item.getString("image"),
-                    item.getGeoPoint("location"), item.getString("ownerReference"),
-                    item.getDouble("price")
-                ))
+                    item.getGeoPoint("location"), item.getString("owner"),
+                    item.getDouble("price"), LocalDate.parse(item.getString("startDate")),
+                    LocalDate.parse(item.getString("endDate"))))
             }
             return items
         } catch (e: Exception) {
@@ -108,9 +106,9 @@ class FireBaseCommunication {
             for(item in task.result) {
                 items.add(Item(item.getString("title"), item.getString("category"),
                     item.getString("description"), item.getString("image"),
-                    item.getGeoPoint("location"), item.getString("ownerReference"),
-                    item.getDouble("price")
-                ))
+                    item.getGeoPoint("location"), item.getString("owner") ,
+                    item.getDouble("price"), LocalDate.parse(item.getString("startDate")),
+                    LocalDate.parse(item.getString("endDate"))))
             }
             return items
         } catch (e: Exception) {
@@ -119,23 +117,35 @@ class FireBaseCommunication {
     }
     suspend fun getItemsByUser(userId: String): List<Item> {
         try {
-            val task = items.whereEqualTo("ownerReference", "users/${userId}").get()
+            val task = items.whereEqualTo("owner", "users/${userId}").get()
             task.await()
             val items = LinkedList<Item>()
             if (task.result.size() == 0) return items
             for(item in task.result) {
                 items.add(Item(item.getString("title"), item.getString("category"),
                     item.getString("description"), item.getString("image"),
-                    item.getGeoPoint("location"), item.getString("ownerReference"),
-                    item.getDouble("price")
-                ))
+                    item.getGeoPoint("location"), item.getString("owner"),
+                    item.getDouble("price"), LocalDate.parse(item.getString("startDate")),
+                    LocalDate.parse(item.getString("endDate"))))
             }
             return items
         } catch (e: Exception) {
             throw e
         }
     }
+    suspend fun getItemId(item: Item): String?{
+        val task = items.whereEqualTo("title", item.getTitle()).whereEqualTo("category", item.getCategory()).whereEqualTo("description", item.getDescription()).whereEqualTo("price", item.getPrice()).get()
+        task.await()
+        if (task.result.size() == 0) return null
+        val result = task.result.documents[0]
+        return result.id
+    }
 
+    fun updateItem(item: Item, id: String): Item{
+        db.collection("items").document(id)
+            .set(item)
+        return item
+    }
     fun writeNewItem(item: Item): Item{
         db.collection("items").document()
             .set(item)
@@ -159,7 +169,6 @@ class FireBaseCommunication {
             throw e
         }
     }
-
     suspend fun getImage(downloadPath: String): String? {
         return try {
             // Get a reference to the file in Firebase Storage

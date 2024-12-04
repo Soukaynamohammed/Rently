@@ -5,7 +5,7 @@ import android.os.Parcelable
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
-
+import java.time.LocalDate
 
 @Parcelize
 class Item() : Parcelable {
@@ -14,30 +14,26 @@ class Item() : Parcelable {
     private var description: String? = null
     private var image: String? = null
     private var location: GeoPoint? = null
-    private var ownerReference: String? = null
-    private var price: Double? = null;
-
-    constructor(title: String?, category: String?, description: String?, image: String?, location: GeoPoint?, ownerReference: String?, price: Double?) : this() {
+    private var owner: String? = null
+    private var price: Double? = null
+    private var startDate: LocalDate? = null
+    private var endDate: LocalDate? = null
+    constructor(title: String?, category: String?, description: String?, image: String?, location: GeoPoint?, ownerReference: String?, price: Double?, startDate: LocalDate?, endDate: LocalDate?) : this() {
         this.title = title
         this.category = category
         this.description = description
         this.image = image
         this.location = location
-        this.ownerReference = ownerReference
+        this.owner = ownerReference
         this.price = price
+        this.startDate = startDate
+        this.endDate = endDate
     }
-
     fun getTitle(): String? {
         return title
     }
     fun setTitle(title: String?){
         this.title = title
-    }
-    fun getPrice(): Double? {
-        return this.price
-    }
-    fun setPrice(price: Double?){
-        this.price = price
     }
     fun getCategory(): String?{
         return category
@@ -64,10 +60,28 @@ class Item() : Parcelable {
         this.location = location
     }
     fun getOwnerReference(): String?{
-        return  ownerReference
+        return owner
     }
     fun setOwnerReference(ownerReference: String?){
-        this.ownerReference = ownerReference
+        this.owner = ownerReference
+    }
+    fun getPrice(): Double?{
+        return price
+    }
+    fun setPrice(price: Double) {
+        this.price = price
+    }
+    fun getStartDate(): LocalDate? {
+        return startDate
+    }
+    fun setStartDate(startDate: LocalDate){
+        this.startDate = startDate
+    }
+    fun getEndDate(): LocalDate? {
+        return endDate
+    }
+    fun setEndDate(endDate: LocalDate){
+        this.endDate = endDate
     }
 
     companion object : Parceler<Item> {
@@ -78,9 +92,10 @@ class Item() : Parcelable {
             val image = parcel.readString()
             val location = GeoPoint(parcel.readDouble(), parcel.readDouble())
             val ownerReference = parcel.readString()
-            val price = parcel.readString()?.toDouble()
-
-            return Item(title, category, description, image, location, ownerReference, price)
+            val price = parcel.readDouble()
+            val startDate = LocalDate.parse(parcel.readString())
+            val endDate = LocalDate.parse(parcel.readString())
+            return Item(title, category, description, image, location, ownerReference, price, startDate, endDate)
         }
 
         override fun Item.write(parcel: Parcel, flags: Int) {
@@ -88,7 +103,6 @@ class Item() : Parcelable {
             parcel.writeString(category)
             parcel.writeString(description)
             parcel.writeString(image)
-
             if (location != null) {
                 parcel.writeDouble(location!!.latitude)
                 parcel.writeDouble(location!!.longitude)
@@ -96,10 +110,10 @@ class Item() : Parcelable {
                 parcel.writeDouble(0.0)
                 parcel.writeDouble(0.0)
             }
-            parcel.writeString(ownerReference)
-
+            parcel.writeString(owner)
             price?.let { parcel.writeDouble(it) }
-
+            parcel.writeString(startDate.toString())
+            parcel.writeString(endDate.toString())
         }
 
     }

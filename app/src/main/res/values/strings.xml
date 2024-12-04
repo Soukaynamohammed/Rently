@@ -21,4 +21,13 @@
     <string name="add">Add</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="description">Description</string>
+    <string name="title">Title</string>
+    <string name="price">Price</string>
+    <string name="available">Available</string>
+    <string name="availability">Availability</string>
+    <string name="category">category</string>
+    <string name="from">From</string>
+    <string name="date">date</string>
+    <string name="until">Until</string>
 </resources>
