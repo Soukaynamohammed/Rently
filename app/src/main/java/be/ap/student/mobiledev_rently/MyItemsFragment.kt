@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +15,7 @@ import be.ap.student.mobiledev_rently.dataClasses.User
 import be.ap.student.mobiledev_rently.databinding.FragmentMyItemsBinding
 import be.ap.student.mobiledev_rently.databinding.FragmentProfileBinding
 import be.ap.student.mobiledev_rently.util.FireBaseCommunication
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 
 
@@ -41,8 +43,10 @@ class MyItemsFragment : Fragment() {
         binding = FragmentMyItemsBinding.inflate(inflater, container, false)
         val view = binding.root
 
+        val addItemButtom: FloatingActionButton = binding.addItem
+
         setupRecyclerView()
-//        Log.d("isUserNull", user.toString())
+
         user?.let {
             viewLifecycleOwner.lifecycleScope.launch {
                 userId = firebaseCommunication.getUserID(user!!.getEmail().toString())
@@ -52,6 +56,17 @@ class MyItemsFragment : Fragment() {
                 }
             }
         }
+
+        addItemButtom.setOnClickListener {
+            Log.d("AddItemButton", "Button clicked")
+            user?.let {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.container, AddItemFragment.newInstance(it))
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
+
 
         return view
     }
