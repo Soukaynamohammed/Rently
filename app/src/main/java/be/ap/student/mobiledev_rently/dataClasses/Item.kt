@@ -18,13 +18,13 @@ class Item() : Parcelable {
     private var price: Double? = null
     private var startDate: LocalDate? = null
     private var endDate: LocalDate? = null
-    constructor(title: String?, category: String?, description: String?, image: String?, location: GeoPoint?, ownerReference: String?, price: Double?, startDate: LocalDate?, endDate: LocalDate?) : this() {
+    constructor(title: String?, category: String?, description: String?, image: String?, location: GeoPoint?, owner: String?, price: Double?, startDate: LocalDate?, endDate: LocalDate?) : this() {
         this.title = title
         this.category = category
         this.description = description
         this.image = image
         this.location = location
-        this.owner = ownerReference
+        this.owner = owner
         this.price = price
         this.startDate = startDate
         this.endDate = endDate
@@ -59,11 +59,11 @@ class Item() : Parcelable {
     fun setLocation(location: GeoPoint?){
         this.location = location
     }
-    fun getOwnerReference(): String?{
+    fun getOwner(): String?{
         return owner
     }
-    fun setOwnerReference(ownerReference: String?){
-        this.owner = ownerReference
+    fun setOwner(owner: String){
+        this.owner = owner
     }
     fun getPrice(): Double?{
         return price
@@ -91,11 +91,11 @@ class Item() : Parcelable {
             val description = parcel.readString()
             val image = parcel.readString()
             val location = GeoPoint(parcel.readDouble(), parcel.readDouble())
-            val ownerReference = parcel.readString()
+            val owner = parcel.readString()
             val price = parcel.readDouble()
             val startDate = LocalDate.parse(parcel.readString())
             val endDate = LocalDate.parse(parcel.readString())
-            return Item(title, category, description, image, location, ownerReference, price, startDate, endDate)
+            return Item(title, category, description, image, location, owner, price, startDate, endDate)
         }
 
         override fun Item.write(parcel: Parcel, flags: Int) {

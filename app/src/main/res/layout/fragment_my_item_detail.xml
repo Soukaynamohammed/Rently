@@ -17,7 +17,7 @@
             android:layout_height="150dp"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/default_character"
-            android:background="@color/background"
+            android:background="#ECE5DC"
             android:focusable="true"
             />
         <LinearLayout

@@ -75,14 +75,18 @@ class MyItemDetailFragment : Fragment() {
             item?.let {
 
                 parentFragmentManager.beginTransaction()
-                    .add(R.id.container, MyItemDetailEditFragment.newInstance(it))
+                    .replace(R.id.container, MyItemDetailEditFragment.newInstance(it))
                     .addToBackStack(null)
                     .commit()
             }
         }
 
         startDateEdit.setOnClickListener{
-            val datePicker = MaterialDatePicker.Builder.datePicker().build()
+            val datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select start date")
+                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .setTheme(R.style.datePicker)
+                .build()
             datePicker.show(parentFragmentManager, "DatePicker")
 
             // Setting up the event for when ok is clicked
@@ -131,5 +135,14 @@ class MyItemDetailFragment : Fragment() {
         }.addOnFailureListener { exception ->
             Log.e("FirebaseDownload", "Failed to load image: ${exception.message}")
         }
+    }
+    companion object {
+        @JvmStatic
+        fun newInstance(item: Item) =
+            MyItemDetailFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable("item", item)
+                }
+            }
     }
 }
