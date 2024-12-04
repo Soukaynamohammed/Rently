@@ -6,6 +6,7 @@ import com.google.firebase.firestore.GeoPoint
 import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
 
+
 @Parcelize
 class Item() : Parcelable {
     private var title: String? = null
@@ -14,19 +15,29 @@ class Item() : Parcelable {
     private var image: String? = null
     private var location: GeoPoint? = null
     private var ownerReference: String? = null
-    constructor(title: String?, category: String?, description: String?, image: String?, location: GeoPoint?, ownerReference: String?) : this() {
+    private var price: Double? = null;
+
+    constructor(title: String?, category: String?, description: String?, image: String?, location: GeoPoint?, ownerReference: String?, price: Double?) : this() {
         this.title = title
         this.category = category
         this.description = description
         this.image = image
         this.location = location
         this.ownerReference = ownerReference
+        this.price = price
     }
+
     fun getTitle(): String? {
         return title
     }
     fun setTitle(title: String?){
         this.title = title
+    }
+    fun getPrice(): Double? {
+        return this.price
+    }
+    fun setPrice(price: Double?){
+        this.price = price
     }
     fun getCategory(): String?{
         return category
@@ -67,7 +78,9 @@ class Item() : Parcelable {
             val image = parcel.readString()
             val location = GeoPoint(parcel.readDouble(), parcel.readDouble())
             val ownerReference = parcel.readString()
-            return Item(title, category, description, image, location, ownerReference)
+            val price = parcel.readString()?.toDouble()
+
+            return Item(title, category, description, image, location, ownerReference, price)
         }
 
         override fun Item.write(parcel: Parcel, flags: Int) {
@@ -75,6 +88,7 @@ class Item() : Parcelable {
             parcel.writeString(category)
             parcel.writeString(description)
             parcel.writeString(image)
+
             if (location != null) {
                 parcel.writeDouble(location!!.latitude)
                 parcel.writeDouble(location!!.longitude)
@@ -83,6 +97,9 @@ class Item() : Parcelable {
                 parcel.writeDouble(0.0)
             }
             parcel.writeString(ownerReference)
+
+            price?.let { parcel.writeDouble(it) }
+
         }
 
     }

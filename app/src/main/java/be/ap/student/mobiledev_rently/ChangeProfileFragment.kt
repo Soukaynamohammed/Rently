@@ -28,15 +28,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.ByteArrayOutputStream
 import java.io.File
-
 import java.lang.System.out
 
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ChangeProfileFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ChangeProfileFragment : Fragment() {
     private var user: User? = null
     private lateinit var binding: FragmentChangeProfileBinding

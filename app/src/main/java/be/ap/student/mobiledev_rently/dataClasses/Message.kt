@@ -13,18 +13,19 @@ class Message() : Parcelable {
         this.message = message
         this.sender = sender
     }
-    fun getMessage(): String?{
-        return message
-    }
-    fun setMessage(message: String){
-        this.message = message
-    }
-    fun getSender(): String?{
-        return sender
-    }
-    fun setSender(sender: String){
-        this.sender = sender
-    }
+//    Ik krijg error hierdoor, daarom comment
+//    fun getMessage(): String?{
+//        return message
+//    }
+//    fun setMessage(message: String){
+//        this.message = message
+//    }
+//    fun getSender(): String?{
+//        return sender
+//    }
+//    fun setSender(sender: String){
+//        this.sender = sender
+//    }
     companion object : Parceler<Message> {
         override fun create(parcel: Parcel): Message {
             val message = parcel.readString()

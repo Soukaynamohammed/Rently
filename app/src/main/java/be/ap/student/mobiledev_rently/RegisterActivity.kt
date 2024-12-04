@@ -125,6 +125,8 @@ class RegisterActivity: AppCompatActivity() {
         imageUrl: String?
     ) {
         val user = User(email, username, password, null, imageUrl.orEmpty())
+
+        user.encrypt()
         var result: User? = null
 
         runBlocking {

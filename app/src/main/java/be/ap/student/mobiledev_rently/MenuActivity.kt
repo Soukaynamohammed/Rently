@@ -33,7 +33,8 @@ class MenuActivity : AppCompatActivity() {
                     true
                 }
                 R.id.navigation_my_items->{
-                    loadFragment(MyItemsFragment())
+                    val myItemsFragment = MyItemsFragment.newInstance(user)
+                    loadFragment(myItemsFragment)
                     true
                 }
                 R.id.navigation_profile->{

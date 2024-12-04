@@ -61,11 +61,26 @@ class FireBaseCommunication {
             val result = task.result
             return Item(result.getString("title"), result.getString("category"),
                 result.getString("description"), result.getString("image"),
-                result.getGeoPoint("location"), result.getString("ownerReference") )
+                result.getGeoPoint("location"), result.getString("ownerReference"),
+                result.getDouble("price")
+                )
         } catch (e: Exception) {
             throw e
         }
     }
+
+    suspend fun getUserID(email: String): String? {
+        try {
+            val task = users.whereEqualTo("email", email).get()
+            task.await()
+            if (task.result.size() == 0) return null
+            val result = task.result.documents[0]
+            return result.id
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
     suspend fun getItems(): List<Item> {
         try {
             val task = items.get()
@@ -75,7 +90,9 @@ class FireBaseCommunication {
             for(item in task.result) {
                 items.add(Item(item.getString("title"), item.getString("category"),
                     item.getString("description"), item.getString("image"),
-                    item.getGeoPoint("location"), item.getString("ownerReference") ))
+                    item.getGeoPoint("location"), item.getString("ownerReference"),
+                    item.getDouble("price")
+                ))
             }
             return items
         } catch (e: Exception) {
@@ -91,7 +108,9 @@ class FireBaseCommunication {
             for(item in task.result) {
                 items.add(Item(item.getString("title"), item.getString("category"),
                     item.getString("description"), item.getString("image"),
-                    item.getGeoPoint("location"), item.getString("ownerReference") ))
+                    item.getGeoPoint("location"), item.getString("ownerReference"),
+                    item.getDouble("price")
+                ))
             }
             return items
         } catch (e: Exception) {
@@ -107,7 +126,9 @@ class FireBaseCommunication {
             for(item in task.result) {
                 items.add(Item(item.getString("title"), item.getString("category"),
                     item.getString("description"), item.getString("image"),
-                    item.getGeoPoint("location"), item.getString("ownerReference") ))
+                    item.getGeoPoint("location"), item.getString("ownerReference"),
+                    item.getDouble("price")
+                ))
             }
             return items
         } catch (e: Exception) {
@@ -138,6 +159,7 @@ class FireBaseCommunication {
             throw e
         }
     }
+
     suspend fun getImage(downloadPath: String): String? {
         return try {
             // Get a reference to the file in Firebase Storage

@@ -50,6 +50,7 @@ class ChangePasswordFragment : Fragment() {
 
                     runBlocking {
                         launch {
+                            it.encrypt()
                             FireBaseCommunication().updateUser(it, it.getEmail())
                         }.join()
                     }
