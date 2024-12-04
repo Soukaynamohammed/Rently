@@ -1,5 +1,6 @@
 package be.ap.student.mobiledev_rently
 
+import android.app.DatePickerDialog
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
@@ -12,19 +13,18 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import be.ap.student.mobiledev_rently.dataClasses.Item
 import be.ap.student.mobiledev_rently.databinding.FragmentMyItemDetailBinding
-import be.ap.student.mobiledev_rently.util.FireBaseCommunication
 import com.bumptech.glide.Glide
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.util.Calendar
+import java.util.Locale
 
 
 class MyItemDetailFragment : Fragment() {
     private lateinit var binding: FragmentMyItemDetailBinding
     private var item: Item? = null
+    private val calendar = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,41 +82,55 @@ class MyItemDetailFragment : Fragment() {
         }
 
         startDateEdit.setOnClickListener{
-            val datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Select start date")
-                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-                .setTheme(R.style.datePicker)
-                .build()
-            datePicker.show(parentFragmentManager, "DatePicker")
-
-            // Setting up the event for when ok is clicked
-            datePicker.addOnPositiveButtonClickListener {
-                // formatting date in dd-mm-yyyy format.
-                val dateFormatter = SimpleDateFormat("dd-MM-yyyy")
-                item?.setStartDate(LocalDate.parse(dateFormatter.format(it)))
-                var id: String? = null
-                runBlocking {
-                    launch {
-                        id = item?.let { it1 -> FireBaseCommunication().getItemId(it1) }
-                    }
-                }
-
-                item?.let { it1 -> id?.let { it2 -> FireBaseCommunication().updateItem(it1, it2) } }
+            // Create a DatePickerDialog
+            val datePickerDialog = this.context?.let { it1 ->
+                DatePickerDialog(
+                    it1, { DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
+                        // Create a new Calendar instance to hold the selected date
+                        val selectedDate = Calendar.getInstance()
+                        // Set the selected date using the values received from the DatePicker dialog
+                        selectedDate.set(year, monthOfYear, dayOfMonth)
+                        // Create a SimpleDateFormat to format the date as "dd/MM/yyyy"
+                        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                        // Format the selected date into a string
+                        item?.setStartDate(LocalDate.parse(dateFormat.format(selectedDate.time)))
+                        val formattedDate = dateFormat.format(selectedDate.time)
+                        // Update the TextView to display the selected date with the "Selected Date: " prefix
+                        startDate.text = formattedDate
+                    },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+                )
             }
+            // Show the DatePicker dialog
+            datePickerDialog?.show()
         }
         endDateEdit.setOnClickListener{
-            val datePicker = MaterialDatePicker.Builder.datePicker().build()
-            datePicker.show(parentFragmentManager, "DatePicker")
-
-            // Setting up the event for when ok is clicked
-            datePicker.addOnPositiveButtonClickListener {
-                // formatting date in dd-mm-yyyy format.
-                val dateFormatter = SimpleDateFormat("dd-MM-yyyy")
-                item?.setEndDate(LocalDate.parse(dateFormatter.format(it)))
+            // Create a DatePickerDialog
+            val datePickerDialog = this.context?.let { it1 ->
+                DatePickerDialog(
+                    it1, { DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
+                        // Create a new Calendar instance to hold the selected date
+                        val selectedDate = Calendar.getInstance()
+                        // Set the selected date using the values received from the DatePicker dialog
+                        selectedDate.set(year, monthOfYear, dayOfMonth)
+                        // Create a SimpleDateFormat to format the date as "dd/MM/yyyy"
+                        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                        // Format the selected date into a string
+                        item?.setStartDate(LocalDate.parse(dateFormat.format(selectedDate.time)))
+                        val formattedDate = dateFormat.format(selectedDate.time)
+                        // Update the TextView to display the selected date with the "Selected Date: " prefix
+                        endDate.text = formattedDate
+                    },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+                )
             }
+            // Show the DatePicker dialog
+            datePickerDialog?.show()
         }
-
-
 
         return view
 
