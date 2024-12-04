@@ -2,18 +2,16 @@ package be.ap.student.mobiledev_rently
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import be.ap.student.mobiledev_rently.adapter.MyItemsAdapter
 import be.ap.student.mobiledev_rently.dataClasses.User
 import be.ap.student.mobiledev_rently.databinding.FragmentMyItemsBinding
-import be.ap.student.mobiledev_rently.databinding.FragmentProfileBinding
 import be.ap.student.mobiledev_rently.util.FireBaseCommunication
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
@@ -38,7 +36,7 @@ class MyItemsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = FragmentMyItemsBinding.inflate(inflater, container, false)
         val view = binding.root
@@ -50,7 +48,6 @@ class MyItemsFragment : Fragment() {
         user?.let {
             viewLifecycleOwner.lifecycleScope.launch {
                 userId = firebaseCommunication.getUserID(user!!.getEmail().toString())
-                Log.d("useriditemlist", userId.toString())
                 if (userId != null) {
                     loadUserItems(userId!!)
                 }
@@ -83,8 +80,7 @@ class MyItemsFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val items = firebaseCommunication.getItemsByUser(userId)
-                Log.d("itemlist", items.toString())
-                myItemsAdapter.submitList(items)
+                myItemsAdapter.submitList(items, parentFragmentManager)
             } catch (e: Exception) {
                 e.printStackTrace()
                 Log.e("Item list error", e.message.toString())
