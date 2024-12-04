@@ -129,9 +129,9 @@
                     android:text="@string/from" />
                 <TextView
                     android:id="@+id/startDate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="135dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="185dp"
+                    android:layout_marginStart="85dp"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:layout_marginTop="20dp"
@@ -167,9 +167,9 @@
                     android:text="@string/until" />
                 <TextView
                     android:id="@+id/endDate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="135dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="185dp"
+                    android:layout_marginStart="90dp"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:layout_marginTop="20dp"
