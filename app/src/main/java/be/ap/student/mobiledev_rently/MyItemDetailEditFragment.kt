@@ -24,22 +24,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.ByteArrayOutputStream
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
-/**
- * A simple [Fragment] subclass.
- * Use the [MyItemDetailEditFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class MyItemDetailEditFragment : Fragment() {
     private lateinit var binding: FragmentMyItemDetailEditBinding
     private var item: Item? = null
     private val storageRef = Firebase.storage.reference
     private var isUploadInProgress = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         arguments?.let {
             item = it.getParcelable("item", Item::class.java)
         }
@@ -49,7 +42,7 @@ class MyItemDetailEditFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
+
         binding = FragmentMyItemDetailEditBinding.inflate(inflater, container, false)
         val view = binding.root
 
@@ -92,7 +85,7 @@ class MyItemDetailEditFragment : Fragment() {
                     .into(imageView)
             }
             else{
-                imageView.setImageResource(R.drawable.default_character) // Fallback image
+                imageView.setImageResource(R.drawable.default_character)
             }
         }
         imageView.setOnClickListener {
@@ -164,14 +157,7 @@ class MyItemDetailEditFragment : Fragment() {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MyItemDetailEditFragment.
-         */
+
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(item: Item) =
