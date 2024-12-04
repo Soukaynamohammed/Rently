@@ -13,6 +13,7 @@
     <color name="button_background">#FF000000</color>
     <color name="text">#FF000000</color>
     <color name="error">#ff3333</color>
+    <color name="gray">#9E9D9D</color>
 <!-- colors.xml -->
     <color name="colorPrimary">#FF6200EE</color>
 </resources>

@@ -6,12 +6,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MyItemsFragment">
 
-<androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/recyclerViewMyItems"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clipToPadding="false"
-    android:padding="8dp" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewMyItems"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:padding="8dp" />
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addItem"

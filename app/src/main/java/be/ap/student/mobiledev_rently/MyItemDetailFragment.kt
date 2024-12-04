@@ -57,9 +57,10 @@ class MyItemDetailFragment : Fragment() {
 
         item?.let {
             title.text = it.getTitle()
-            price.text = "$ ${it.getPrice()}/day"
-            category.text = it.getCategory()
+            price.text = "$ ${it.getPrice()} / day"
+            category.text = "Category: ${it.getCategory()}"
             description.text = it.getDescription()
+
             startDate.text = it.getStartDate().toString()
             endDate.text = it.getEndDate().toString()
 
@@ -67,16 +68,17 @@ class MyItemDetailFragment : Fragment() {
                 loadImageFromFirebase(it.getImage()!!, imageView)
                 Glide.with(this)
                     .load(it.getImage())
-                    .placeholder(R.drawable.default_character)
+                    .placeholder(R.drawable.default_item)
                     .into(imageView)
             }
             else{
-                imageView.setImageResource(R.drawable.default_character) // Fallback image
+                imageView.setImageResource(R.drawable.default_item) // Fallback image
             }
         }
+
+
         editButton.setOnClickListener {
             item?.let {
-
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.container, MyItemDetailEditFragment.newInstance(it))
                     .addToBackStack(null)
@@ -115,6 +117,7 @@ class MyItemDetailFragment : Fragment() {
             // Show the DatePicker dialog
             datePickerDialog?.show()
         }
+
         endDateEdit.setOnClickListener{
             // Create a DatePickerDialog
             val datePickerDialog = this.context?.let { it1 ->
