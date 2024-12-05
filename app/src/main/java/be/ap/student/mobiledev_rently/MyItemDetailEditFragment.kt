@@ -136,9 +136,10 @@ class MyItemDetailEditFragment : Fragment() {
         }
     }
     private fun uploadImage(uri: Uri) {
-        val fileName = "profile_images/${FireBaseCommunication()}.jpg"
+//        val fileName = "profile_images/${FireBaseCommunication()}.jpg"
+        val fileName = "item_images/${FireBaseCommunication()}.jpg"
         val fileRef = storageRef.child(fileName)
-        isUploadInProgress = true // Mark upload as in progress
+        isUploadInProgress = true
 
         val compressedImage = compressImage(uri);
 

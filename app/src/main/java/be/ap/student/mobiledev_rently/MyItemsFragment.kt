@@ -38,6 +38,8 @@ class MyItemsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        //todo : availability
+
         binding = FragmentMyItemsBinding.inflate(inflater, container, false)
         val view = binding.root
 

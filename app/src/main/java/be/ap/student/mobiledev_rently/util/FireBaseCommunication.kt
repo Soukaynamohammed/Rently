@@ -151,12 +151,26 @@ class FireBaseCommunication {
             .set(item)
         return item
     }
+//
+//    fun writeNewItem(item: Item): Item{
+//        db.collection("items").document()
+//            .set(item)
+//        return item
+//    }
 
-    fun writeNewItem(item: Item): Item{
-        db.collection("items").document()
-            .set(item)
-        return item
+    fun writeNewItem(item: Item, callback: (Boolean, String?) -> Unit) {
+        db.collection("items").add(item) // Use `add` to automatically generate a document ID
+            .addOnSuccessListener { documentReference ->
+                Log.d("FirebaseWrite", "Item successfully added with ID: ${documentReference.id}")
+                callback(true, documentReference.id) // Return success and document ID
+            }
+            .addOnFailureListener { exception ->
+                Log.e("FirebaseWrite", "Failed to add item: ${exception.message}")
+                callback(false, exception.message) // Return failure and error message
+            }
     }
+
+
 
     suspend fun getBookingsYourItems(userId: String): List<Booking>{
         try {

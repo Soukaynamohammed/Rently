@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.Calendar
 import java.util.Locale
+import com.google.firebase.firestore.GeoPoint as GeoPoint1
 
 class AddItemFragment : Fragment() {
     private lateinit var binding: FragmentAddItemBinding
@@ -70,8 +71,23 @@ class AddItemFragment : Fragment() {
         val endDate: TextView = binding.endDate
         val startDateEdit: Button = binding.startDateButton
         val endDateEdit: Button = binding.endDateButton
+        var selectedImageUri: Uri? = null
 
         item = Item()
+
+
+        val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let {
+                selectedImageUri = it // Store the URI
+                imageView.setImageURI(it)
+            }
+        }
+
+
+        addPictureButton.setOnClickListener {
+            pickImageLauncher.launch("image/*")
+        }
+
 
         user?.let {
             lifecycleScope.launch {
@@ -86,24 +102,6 @@ class AddItemFragment : Fragment() {
             }
 
         }
-
-
-
-
-//        val userEmail = user?.getEmail()?.trim()
-//        val currentItemId = itemId
-
-//        if (userEmail.isNullOrEmpty()) {
-//            Log.e("AddItemFragment", "User email is null or empty!")
-//        } else {
-//            Log.d("AddItemFragment", "User email: $userEmail")
-//        }
-//
-//        if (currentItemId.isNullOrEmpty()) {
-//            Log.e("AddItemFragment", "Item ID is null or empty!")
-//        } else {
-//            Log.d("AddItemFragment", "Item ID: $currentItemId")
-//        }
 
 
         startDateEdit.setOnClickListener {
@@ -170,21 +168,6 @@ class AddItemFragment : Fragment() {
         }
 
 
-
-
-        val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let {
-                imageView.setImageURI(it)
-                uploadImage(it)
-            }
-        }
-
-        addPictureButton.setOnClickListener {
-            pickImageLauncher.launch("image/*")
-        }
-
-
-
         saveButton.setOnClickListener {
             val updatedTitle = title.text.toString()
             val updatedPrice = price.text.toString().toDoubleOrNull() ?: 0.0
@@ -197,44 +180,23 @@ class AddItemFragment : Fragment() {
                 setPrice(updatedPrice)
                 setCategory(updatedCategory)
                 setDescription(updatedDescription)
-                setOwner(userId!!)
+                setOwner("/users/" + userId!!)
+                setLocation(GeoPoint1(0.0, 0.0))
+                setStartDate(startDate.text.toString())
+                setEndDate(endDate.text.toString())
             }
 
-            lifecycleScope.launch {
-                firebaseCommunication.writeNewItem(item!!)
-
-                val myItemsFragment = MyItemsFragment.newInstance(user)
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.container, myItemsFragment)
-                    .addToBackStack(null)
-                    .commit()
-            }
-        }
-
-        saveButton.setOnClickListener {
-            val updatedTitle = title.text.toString()
-            val updatedPrice = price.text.toString().toDoubleOrNull() ?: 0.0 // Handle invalid input gracefully
-            val updatedCategory = category.text.toString()
-            val updatedDescription = description.text.toString()
-
-            item?.apply {
-                setTitle(updatedTitle)
-                setPrice(updatedPrice)
-                setCategory(updatedCategory)
-                setDescription(updatedDescription)
-            }
-
-            itemId?.let { it1 ->
-                FireBaseCommunication().updateItem(item!!, it1)
-
-                val myItemsFragment = MyItemsFragment.newInstance(user)
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.container, myItemsFragment)
-                    .addToBackStack(null)
-                    .commit()
+            if (selectedImageUri != null) {
+                uploadImage(selectedImageUri!!) { imageUrl ->
+                    item?.setImage(imageUrl)
+                    saveItem()
+                }
+            } else {
+                saveItem()
             }
         }
 
+        //todo : make delete function if there is time left
         //todo : add location permissions or someting
         val view = binding.root
 
@@ -269,12 +231,55 @@ class AddItemFragment : Fragment() {
             }
     }
 
+    private fun saveItem() {
+        item?.let {
+            firebaseCommunication.writeNewItem(it) { success, message ->
+                if (success) {
+                    Log.d("AddItemFragment", "Item successfully added with ID: $message")
+                    val myItemsFragment = MyItemsFragment.newInstance(user)
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.container, myItemsFragment)
+                        .addToBackStack(null)
+                        .commit()
+                } else {
+                    Log.e("AddItemFragment", "Failed to add item: $message")
+                }
+            }
+        }
+    }
+
     private fun compressImage(uri: Uri): ByteArray {
         val bitmap = BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(uri))
         val outputStream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 50, outputStream) // Compress to 50% quality
         return outputStream.toByteArray()
     }
+    private fun uploadImage(uri: Uri, callback: (String?) -> Unit) {
+        val fileName = "item_images/${System.currentTimeMillis()}.jpg" // Unique filename using timestamp
+        val fileRef = storageRef.child(fileName)
+        isUploadInProgress = true
+
+        val compressedImage = compressImage(uri)
+
+        fileRef.putBytes(compressedImage)
+            .addOnSuccessListener {
+                fileRef.downloadUrl.addOnSuccessListener { downloadUri ->
+                    Log.d("FirebaseUpload", "Download URL: $downloadUri")
+                    callback(downloadUri.toString()) // Call the callback with the download URL
+                    isUploadInProgress = false
+                }.addOnFailureListener { exception ->
+                    Log.e("FirebaseUpload", "Failed to get download URL: ${exception.message}")
+                    callback(null) // If there's an error, return null
+                    isUploadInProgress = false
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("FirebaseUpload", "Image upload failed: ${exception.message}")
+                callback(null) // If there's an error, return null
+                isUploadInProgress = false
+            }
+    }
+
 
     private fun uploadImage(uri: Uri) {
         val fileName = "item_images/${FireBaseCommunication()}.jpg"

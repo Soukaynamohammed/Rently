@@ -158,7 +158,7 @@ class MyItemDetailFragment : Fragment() {
     private fun loadImageFromFirebase(imageUrl: String?, imageView: ImageView) {
         if (imageUrl.isNullOrEmpty()) {
             Log.e("LoadImage", "Image URL is null or empty.")
-            imageView.setImageResource(R.drawable.default_character) // Set a default image
+            imageView.setImageResource(R.drawable.default_item)
             return
         }
 

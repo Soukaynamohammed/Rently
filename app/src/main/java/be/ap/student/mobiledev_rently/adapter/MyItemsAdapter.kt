@@ -57,13 +57,13 @@ class MyItemsAdapter : RecyclerView.Adapter<MyItemsAdapter.MyItemsViewHolder>(){
             if (imageUrl.isNullOrEmpty()) {
                 Glide.with(binding.itemImage.context)
                     .load(R.drawable.default_item)
-                    .skipMemoryCache(true) // Skip memory cache
+                    .skipMemoryCache(true)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(binding.itemImage)
             } else {
                 Glide.with(binding.itemImage.context)
                     .load(imageUrl)
-                    .skipMemoryCache(true) // Skip memory cache
+                    .skipMemoryCache(true)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(binding.itemImage)
             }
