@@ -1,12 +1,15 @@
 package be.ap.student.mobiledev_rently
 
+import android.Manifest
+import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,23 +17,25 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import be.ap.student.mobiledev_rently.dataClasses.Item
 import be.ap.student.mobiledev_rently.dataClasses.User
 import be.ap.student.mobiledev_rently.databinding.FragmentAddItemBinding
-import be.ap.student.mobiledev_rently.databinding.FragmentMyItemsBinding
 import be.ap.student.mobiledev_rently.util.FireBaseCommunication
 import com.bumptech.glide.Glide
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.storage.storage
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.ByteArrayOutputStream
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.Calendar
-import java.util.Locale
-import com.google.firebase.firestore.GeoPoint as GeoPoint1
+
 
 class AddItemFragment : Fragment() {
     private lateinit var binding: FragmentAddItemBinding
@@ -42,9 +47,8 @@ class AddItemFragment : Fragment() {
     private lateinit var firebaseCommunication: FireBaseCommunication
     private val calendar = Calendar.getInstance()
     private var itemId: String? = null
-
-
-
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var location: GeoPoint? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -181,9 +185,13 @@ class AddItemFragment : Fragment() {
                 setCategory(updatedCategory)
                 setDescription(updatedDescription)
                 setOwner("/users/" + userId!!)
-                setLocation(GeoPoint1(0.0, 0.0))
+                setLocation(GeoPoint(0.0, 0.0))
                 setStartDate(startDate.text.toString())
                 setEndDate(endDate.text.toString())
+            }
+
+            if (location != null) {
+                item?.setLocation(location)
             }
 
             if (selectedImageUri != null) {
@@ -198,11 +206,34 @@ class AddItemFragment : Fragment() {
 
         //todo : make delete function if there is time left
         //todo : add location permissions or someting
+
+        binding.locationButton.setOnClickListener {
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.activity as Activity)
+            if (ActivityCompat.checkSelfPermission(
+                    this.context as Context,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    this.context as Context,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+            }
+            fusedLocationClient.lastLocation.addOnSuccessListener {
+                location = GeoPoint(it.latitude, it.longitude)
+            }
+        }
+
         val view = binding.root
 
         return view
     }
-
 
     private fun uploadImageToFirebase(uri: Uri, callback: (String?) -> Unit) {
         val fileName = "item_images/${FireBaseCommunication()}.jpg"
@@ -312,7 +343,6 @@ class AddItemFragment : Fragment() {
                 isUploadInProgress = false // Mark upload as complete (failed)
             }
     }
-
     companion object {
         @JvmStatic
         fun newInstance(user: User?): AddItemFragment {

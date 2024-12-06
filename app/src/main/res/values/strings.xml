@@ -30,4 +30,7 @@
     <string name="from">From</string>
     <string name="date">date</string>
     <string name="until">Until</string>
+    <string name="location">Location</string>
+    <string name="automatic_loction">Automatic Loction</string>
+    <string name="address">Address</string>
 </resources>
