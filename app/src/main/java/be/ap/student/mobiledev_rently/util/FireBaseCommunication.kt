@@ -9,7 +9,6 @@ import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.getField
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
-import java.time.LocalDate
 import java.util.LinkedList
 
 
@@ -125,7 +124,6 @@ class FireBaseCommunication {
             val items = LinkedList<Item>()
             if (task.result.size() == 0) return items
             for(item in task.result) {
-                Log.e("Items", "test")
                 val startDate= item.getString("startDate")?:""
                 val endDate= item.getString("endDate")?:""
                 items.add(Item(item.getString("title"), item.getString("category"),
@@ -180,8 +178,8 @@ class FireBaseCommunication {
             if (task.result.size() == 0) return bookings
             for(booking in task.result) {
                 bookings.add(Booking(
-                    StateType.valueOf(booking.getString("title").toString()), LocalDate.parse(booking.getString("startDate")),
-                    LocalDate.parse(booking.getString("endDate")), booking.getField("messages"),
+                    StateType.valueOf(booking.getString("title").toString()), booking.getString("startDate"),
+                    booking.getString("endDate"), booking.getField("messages"),
                     booking.getString("owner"), booking.getString("rentee"),
                     booking.getString("item")))
             }
@@ -202,6 +200,21 @@ class FireBaseCommunication {
         } catch (e: Exception) {
             e.printStackTrace()
             null // Return null if an error occurs
+        }
+    }
+    suspend fun getBookingsByItem(item: Item): List<Booking>{
+        try {
+            val itemId = getItemId(item) ?: return emptyList()
+            val task = bookings.whereEqualTo("item", "/items/${itemId}").get()
+            task.await()
+            val bookings = LinkedList<Booking>()
+            if (task.result.size() == 0) return bookings
+            task.result.forEach {
+                bookings.add(it.toObject(Booking::class.java))
+            }
+            return bookings
+        } catch (e: Exception) {
+            throw e
         }
     }
 }

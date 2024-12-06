@@ -156,7 +156,7 @@ class MyItemDetailEditFragment : Fragment() {
 
                     Glide.with(this)
                         .load(compressedImage.toString())
-                        .placeholder(R.drawable.default_character)
+                        .placeholder(R.drawable.default_item)
                         .into(binding.imageView)
                 }
             }

@@ -2,22 +2,22 @@ package be.ap.student.mobiledev_rently.dataClasses
 
 import android.os.Parcel
 import android.os.Parcelable
+import android.util.Log
 import be.ap.student.mobiledev_rently.util.StateType
 import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
-import java.time.LocalDate
 import java.util.LinkedList
 
 @Parcelize
 class Booking() : Parcelable {
     private var bookingState: StateType? = null
-    private var startDate: LocalDate? = null
-    private var endDate: LocalDate? = null
+    private var startDate: String? = null
+    private var endDate: String? = null
     private var messages: List<Message>? = LinkedList<Message>()
     private var owner: String? = null
     private var rentee: String? = null
     private var item: String? = null
-    constructor(bookingState: StateType?, startDate: LocalDate?, endDate: LocalDate?, messages: List<Message>?, owner: String?, rentee: String?, item: String?) : this() {
+    constructor(bookingState: StateType?, startDate: String?, endDate: String?, messages: List<Message>?, owner: String?, rentee: String?, item: String?) : this() {
         this.bookingState = bookingState
         this.startDate = startDate
         this.endDate = endDate
@@ -32,16 +32,16 @@ class Booking() : Parcelable {
     fun setBookingState(bookingState: StateType){
         this.bookingState = bookingState
     }
-    fun getStartDate(): LocalDate?{
+    fun getStartDate(): String?{
         return startDate
     }
-    fun setStartDate(startDate: LocalDate?){
+    fun setStartDate(startDate: String){
         this.startDate = startDate
     }
-    fun getEndDate(): LocalDate?{
+    fun getEndDate(): String?{
         return endDate
     }
-    fun setEndDate(endDate: LocalDate?){
+    fun setEndDate(endDate: String){
         this.endDate = endDate
     }
     fun getMessages(): List<Message>?{
@@ -71,9 +71,11 @@ class Booking() : Parcelable {
 
     companion object : Parceler<Booking> {
         override fun create(parcel: Parcel): Booking {
-            val bookingState = StateType.valueOf(parcel.readString().toString())
-            val startDate = LocalDate.parse(parcel.readString())
-            val endDate = LocalDate.parse(parcel.readString())
+            val read = parcel.readString().toString()
+            val bookingState = StateType.valueOf(read)
+            Log.d("booking", "create: $read")
+            val startDate = parcel.readString()?:""
+            val endDate = parcel.readString()?:""
             val messages = parcel.readArray(
                 ClassLoader.getSystemClassLoader(),
                 Message::class.java
@@ -86,8 +88,8 @@ class Booking() : Parcelable {
 
         override fun Booking.write(parcel: Parcel, flags: Int) {
             parcel.writeString(bookingState.toString())
-            parcel.writeString(startDate.toString())
-            parcel.writeString(endDate.toString())
+            parcel.writeString(startDate)
+            parcel.writeString(endDate)
             parcel.writeArray(arrayOf(messages))
             parcel.writeString(owner)
             parcel.writeString(rentee)

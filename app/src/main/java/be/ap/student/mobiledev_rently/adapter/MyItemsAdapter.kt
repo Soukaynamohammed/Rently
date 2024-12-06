@@ -1,17 +1,22 @@
 package be.ap.student.mobiledev_rently.adapter
-import be.ap.student.mobiledev_rently.MyItemDetailFragment
-import android.util.Log
+import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
+import be.ap.student.mobiledev_rently.MyItemDetailFragment
 import be.ap.student.mobiledev_rently.R
+import be.ap.student.mobiledev_rently.dataClasses.Booking
 import be.ap.student.mobiledev_rently.dataClasses.Item
-import be.ap.student.mobiledev_rently.databinding.FragmentMyItemsBinding
 import be.ap.student.mobiledev_rently.databinding.SingleItemMyItemsBinding
+import be.ap.student.mobiledev_rently.util.FireBaseCommunication
+import be.ap.student.mobiledev_rently.util.StateType
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import java.time.LocalDate
+import java.util.LinkedList
 
 class MyItemsAdapter : RecyclerView.Adapter<MyItemsAdapter.MyItemsViewHolder>(){
     private var itemList = listOf<Item>()
@@ -36,7 +41,6 @@ class MyItemsAdapter : RecyclerView.Adapter<MyItemsAdapter.MyItemsViewHolder>(){
         val item = itemList[position]
         holder.bind(item)
         binding.editButton.setOnClickListener {
-            Log.d("MyItemsAdapter", "Item clicked: ${item.getTitle()}")
             parentFragmentManager.beginTransaction()
                 .replace(R.id.container, MyItemDetailFragment.newInstance(item))
                 .addToBackStack(null)
@@ -52,6 +56,32 @@ class MyItemsAdapter : RecyclerView.Adapter<MyItemsAdapter.MyItemsViewHolder>(){
         fun bind(item: Item) {
             binding.itemName.text = item.getTitle()
             binding.itemPrice.text = "Price: $${item.getPrice()}"
+            var availability = "Unavailable"
+            if(!(item.getStartDate()==""||item.getEndDate()=="")){
+                if(LocalDate.now()>=LocalDate.parse(item.getStartDate())&&LocalDate.now()<=LocalDate.parse(item.getEndDate())){
+                    availability = "Available"
+                    var bookings: List<Booking> = LinkedList()
+                    runBlocking {
+                        launch {
+                            bookings = FireBaseCommunication().getBookingsByItem(item)
+                        }
+                            .join()
+                    }
+
+                    bookings.forEach {
+                        if(it.getBookingState()== StateType.ACCEPTED && LocalDate.now()>=LocalDate.parse(it.getStartDate())&&LocalDate.now()<=LocalDate.parse(it.getEndDate())) {
+                            availability = "Unavailable"
+                        }
+                    }
+                }
+            } else {
+                availability = "Unavailable"
+            }
+
+            if(availability=="Unavailable"){
+                binding.itemAvailability.setTextColor(getColor(binding.itemAvailability.context))
+            }
+            binding.itemAvailability.text = availability
 
             val imageUrl = item.getImage()
             if (imageUrl.isNullOrEmpty()) {
@@ -69,4 +99,5 @@ class MyItemsAdapter : RecyclerView.Adapter<MyItemsAdapter.MyItemsViewHolder>(){
             }
         }
     }
+    private fun getColor(ctx: Context) = ctx.resources.getColor(R.color.error, ctx.theme)
 }
