@@ -2,16 +2,21 @@ package be.ap.student.mobiledev_rently.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
+import be.ap.student.mobiledev_rently.ItemDetailFragment
+import be.ap.student.mobiledev_rently.MyItemDetailFragment
 import be.ap.student.mobiledev_rently.R
 import be.ap.student.mobiledev_rently.dataClasses.Item
 import be.ap.student.mobiledev_rently.databinding.SingleItemMyItemsBinding
 import be.ap.student.mobiledev_rently.databinding.SingleItemSearchItemsBinding
 import com.bumptech.glide.Glide
 
-class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
-
+class SearchAdapter(private val parentFragmentManager: FragmentManager) : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
+    private lateinit var binding: SingleItemSearchItemsBinding
     private var itemList = listOf<Item>()
+//    private lateinit var parentFragmentManager: FragmentManager
+
 
     fun submitList(items: List<Item>) {
         itemList = items
@@ -19,14 +24,21 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = SingleItemSearchItemsBinding.inflate(inflater, parent, false)
+        binding = SingleItemSearchItemsBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        )
         return SearchViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         val item = itemList[position]
         holder.bind(item)
+        binding.editButton.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.container, ItemDetailFragment.newInstance(item))
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     override fun getItemCount(): Int = itemList.size

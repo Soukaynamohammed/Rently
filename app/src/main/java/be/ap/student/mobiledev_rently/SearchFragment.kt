@@ -25,7 +25,8 @@ import kotlinx.coroutines.runBlocking
 class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
     private lateinit var firebaseCommunication: FireBaseCommunication
-    private val adapter = SearchAdapter()
+    private lateinit var adapter: SearchAdapter
+
     private var userId: String? = null
 
     var user: User? = null
@@ -71,9 +72,13 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Pass the fragment manager to the adapter
+        adapter = SearchAdapter(parentFragmentManager)
+
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
+        // Load items
         loadItems()
     }
 
