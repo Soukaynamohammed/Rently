@@ -21,7 +21,6 @@
 
 
 
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addItem"
         android:layout_width="wrap_content"

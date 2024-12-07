@@ -88,7 +88,7 @@ class AddItemFragment : Fragment() {
 
         val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let {
-                selectedImageUri = it // Store the URI
+                selectedImageUri = it
                 imageView.setImageURI(it)
             }
         }
@@ -214,7 +214,6 @@ class AddItemFragment : Fragment() {
             saveItem()
         }
 
-        //todo : make delete function if there is time left
         //todo : add location permissions or someting
 
         binding.locationButton.setOnClickListener {
@@ -269,7 +268,6 @@ class AddItemFragment : Fragment() {
 
     private fun uploadImageToFirebase(uri: Uri, callback: (String?) -> Unit) {
         val fileName = "item_images/${FireBaseCommunication()}.jpg"
-//        val fileName = "profile_images/${FireBaseCommunication()}.jpg"
 
         val fileRef = storageRef.child(fileName)
         isUploadInProgress = true

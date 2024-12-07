@@ -15,6 +15,7 @@
     <string name="search_term">Search item...</string>
     <string name="change">Change</string>
     <string name="Edit">Edit</string>
+    <string name="pick">Pick</string>
     <string name="changePassword">Change Password</string>
     <string name="save">Save</string>
     <string name="repeatPassword">Repeat Password</string>
@@ -26,10 +27,13 @@
     <string name="price">Price</string>
     <string name="available">Available</string>
     <string name="availability">Availability</string>
+    <string name="rentingPeriod">Choose Your Renting Period</string>
     <string name="category">Category</string>
     <string name="from">From</string>
-    <string name="date">date</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
     <string name="until">Until</string>
+    <string name="rent">Rent Now</string>
     <string name="location">Location</string>
     <string name="automatic_loction">Automatic Loction</string>
     <string name="address">Address</string>

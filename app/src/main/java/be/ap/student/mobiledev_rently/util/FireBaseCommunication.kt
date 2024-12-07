@@ -17,6 +17,8 @@ class FireBaseCommunication {
     private val items = FirebaseFirestore.getInstance().collection("/items")
     private val bookings = FirebaseFirestore.getInstance().collection("/boekingen")
     private val db = Firebase.firestore
+
+
     fun writeNewUser(user: User): User{
         db.collection("users").document()
             .set(user)
@@ -98,6 +100,42 @@ class FireBaseCommunication {
             throw e
         }
     }
+
+    suspend fun getItemsSearchItems(currentUserId: String): List<Item> {
+        try {
+            val task = items.get()
+            task.await()
+
+            val items = LinkedList<Item>()
+
+            if (task.result.size() == 0) return items
+
+            for (item in task.result) {
+                val owner = item.getString("owner")
+                val currentUserOwnerString = "/users/$currentUserId"
+                Log.d("ItemOwner", "Owner: $owner, Current User: /users/$currentUserId")
+
+                if (owner != currentUserOwnerString) {
+                    items.add(Item(
+                        item.getString("title"),
+                        item.getString("category"),
+                        item.getString("description"),
+                        item.getString("image"),
+                        item.getGeoPoint("location"),
+                        owner,
+                        item.getDouble("price"),
+                        item.getString("startDate") ?: "",
+                        item.getString("endDate") ?: ""
+                    ))
+                }
+            }
+            return items
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+
     suspend fun getItemsByCategory(category: String): List<Item> {
         try {
             val task = items.whereEqualTo("category", category).get()

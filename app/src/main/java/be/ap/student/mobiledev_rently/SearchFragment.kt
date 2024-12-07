@@ -10,13 +10,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import be.ap.student.mobiledev_rently.adapter.SearchAdapter
 import be.ap.student.mobiledev_rently.dataClasses.User
+import be.ap.student.mobiledev_rently.databinding.FragmentProfileBinding
+import be.ap.student.mobiledev_rently.databinding.FragmentSearchBinding
+import be.ap.student.mobiledev_rently.util.FireBaseCommunication
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class SearchFragment : Fragment() {
+    private lateinit var binding: FragmentSearchBinding
+    private lateinit var firebaseCommunication: FireBaseCommunication
+    private lateinit var adapter: SearchAdapter
+
+    private var userId: String? = null
+
     var user: User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,13 +42,60 @@ class SearchFragment : Fragment() {
                     .join()
             }
         }
+        firebaseCommunication = FireBaseCommunication()
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_search, container, false)
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        val view = binding.root
+        binding.root
+
+        user?.let {
+            // Fetch user ID and load items after it's fetched
+            lifecycleScope.launch {
+                userId = firebaseCommunication.getUserID(user!!.getEmail().toString())
+                if (userId != null) {
+                    // Only load items after the userId is properly fetched
+                    loadItems()
+                } else {
+                    Log.e("SearchFragment", "Failed to fetch userId")
+                }
+            }
+        }
+
+
+        return view
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Pass the fragment manager to the adapter
+        adapter = SearchAdapter(parentFragmentManager)
+
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.adapter = adapter
+
+        // Load items
+        loadItems()
+    }
+
+    private fun loadItems() {
+        lifecycleScope.launch {
+            try {
+                val items = FireBaseCommunication().getItemsSearchItems(userId.toString())
+                adapter.submitList(items)
+            } catch (e: Exception) {
+                Log.e("LoadItems", "Error loading items: ${e.message}")
+            }
+        }
+    }
+
+
+
+
     private fun getLocation() {
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
