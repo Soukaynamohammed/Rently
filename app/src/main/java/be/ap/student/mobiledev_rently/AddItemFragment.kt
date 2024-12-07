@@ -25,13 +25,19 @@ import be.ap.student.mobiledev_rently.dataClasses.User
 import be.ap.student.mobiledev_rently.databinding.FragmentAddItemBinding
 import be.ap.student.mobiledev_rently.util.FireBaseCommunication
 import com.bumptech.glide.Glide
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.storage.storage
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import java.io.ByteArrayOutputStream
 import java.time.LocalDate
 import java.util.Calendar
@@ -192,16 +198,20 @@ class AddItemFragment : Fragment() {
 
             if (location != null) {
                 item?.setLocation(location)
+            } else if( binding.location.text.toString() != ""){
+                runBlocking {
+                    launch(Dispatchers.IO) {
+                        item?.setLocation(getLocation(binding.location.text.toString()))
+                    }
+                        .join()
+                }
             }
-
             if (selectedImageUri != null) {
                 uploadImage(selectedImageUri!!) { imageUrl ->
                     item?.setImage(imageUrl)
-                    saveItem()
                 }
-            } else {
-                saveItem()
             }
+            saveItem()
         }
 
         //todo : make delete function if there is time left
@@ -233,6 +243,28 @@ class AddItemFragment : Fragment() {
         val view = binding.root
 
         return view
+    }
+
+    private fun getLocation(address: String): GeoPoint {
+        val client = OkHttpClient()
+        val request: Request = Request.Builder()
+            .url("https://nominatim.openstreetmap.org/search?format=json&q=$address")
+            .method("GET", null)
+            .addHeader("Content-Type", "application/json")
+            .addHeader("Accept", "application/json")
+            .addHeader("User-Agent", "Rently/1.0")
+            .build()
+        try{
+            val response: Response = client.newCall(request).execute()
+
+            val mapper = jacksonObjectMapper()
+            val model: List<Map<String, Any>> = mapper.readValue(response.body?.string().toString())
+            Log.d("tag", "getLocation: lat = ${model[0]["lat"]}, lon = ${model[0]["lon"]}")
+            return GeoPoint(model[0]["lat"].toString().toDouble(), model[0]["lon"].toString().toDouble())
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return GeoPoint(0.0, 0.0)
+        }
     }
 
     private fun uploadImageToFirebase(uri: Uri, callback: (String?) -> Unit) {
