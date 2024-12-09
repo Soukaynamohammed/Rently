@@ -103,31 +103,24 @@ class FireBaseCommunication {
 
     suspend fun getItemsSearchItems(currentUserId: String): List<Item> {
         try {
-            val task = items.get()
+            val task = items.whereNotEqualTo("owner","/users/$currentUserId").get()
             task.await()
 
             val items = LinkedList<Item>()
 
             if (task.result.size() == 0) return items
-
             for (item in task.result) {
-                val owner = item.getString("owner")
-                val currentUserOwnerString = "/users/$currentUserId"
-                Log.d("ItemOwner", "Owner: $owner, Current User: /users/$currentUserId")
-
-                if (owner != currentUserOwnerString) {
-                    items.add(Item(
-                        item.getString("title"),
-                        item.getString("category"),
-                        item.getString("description"),
-                        item.getString("image"),
-                        item.getGeoPoint("location"),
-                        owner,
-                        item.getDouble("price"),
-                        item.getString("startDate") ?: "",
-                        item.getString("endDate") ?: ""
-                    ))
-                }
+                items.add(Item(
+                    item.getString("title"),
+                    item.getString("category"),
+                    item.getString("description"),
+                    item.getString("image"),
+                    item.getGeoPoint("location"),
+                    item.getString("owner"),
+                    item.getDouble("price"),
+                    item.getString("startDate") ?: "",
+                    item.getString("endDate") ?: ""
+                ))
             }
             return items
         } catch (e: Exception) {
