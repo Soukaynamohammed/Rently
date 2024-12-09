@@ -197,19 +197,20 @@
                     android:textColor="@color/black"
                     android:layout_marginTop="20dp"
                     android:textSize="18sp"
-                    android:text="@string/date" />
+                    android:text="@string/from" />
                 <TextView
-                    android:id="@+id/pickupDate"
+                    android:id="@+id/startDateBooking"
                     android:layout_width="135dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="85dp"
                     android:textStyle="bold"
+                    android:text="@string/date"
                     android:textColor="@color/black"
                     android:layout_marginTop="20dp"
                     android:textSize="17sp"
                     />
                 <Button
-                    android:id="@+id/pickupDateButton"
+                    android:id="@+id/startDateBookingButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -234,22 +235,23 @@
                     android:layout_marginTop="20dp"
                     android:textSize="18sp"
                     android:background="@color/white"
-                    android:text="@string/time" />
+                    android:text="@string/until" />
                 <TextView
-                    android:id="@+id/time"
+                    android:id="@+id/endDateBooking"
                     android:layout_width="135dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="90dp"
+                    android:text="@string/date"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:layout_marginTop="20dp"
                     android:textSize="17sp"
                     />
                 <Button
-                    android:id="@+id/timeButton"
+                    android:id="@+id/endDateBookingButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
+                    android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
                     android:textColor="@color/button_text"
                     android:backgroundTint="@color/button_background"

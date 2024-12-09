@@ -1,64 +1,57 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:padding="10dp"
     android:background="@color/white"
-    android:layout_marginBottom="15dp"
-    android:padding="8dp">
+    >
 
     <ImageView
-        android:id="@+id/itemImage"
+        android:id="@+id/bookingItemImage"
         android:layout_width="90dp"
         android:layout_height="90dp"
-        android:layout_marginEnd="8dp"
-        android:visibility="visible"
-        android:contentDescription="Item image"
         android:src="@drawable/default_item"
         android:scaleType="centerCrop"
-
         />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:paddingTop="10dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
         android:orientation="vertical"
-        >
+        android:paddingLeft="10dp">
 
         <TextView
-            android:id="@+id/itemName"
+            android:id="@+id/bookingItemName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Item Name"
-            android:textColor="@color/black"
             android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/itemPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Price: $0.00"
+            android:textStyle="bold"
             android:textColor="@color/black" />
 
         <TextView
-            android:id="@+id/item_availability"
+            android:id="@+id/bookingDates"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Available"
+            android:text="Start - End Date"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/bookingState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Booking State"
             android:textColor="@android:color/holo_green_dark" />
     </LinearLayout>
-
     <Button
         android:id="@+id/editButton"
         android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/button_background"
-        android:text="Edit"
+        android:text="@string/details"
         android:textColor="@color/button_text"
         android:fontFamily="sans-serif" />
 </LinearLayout>

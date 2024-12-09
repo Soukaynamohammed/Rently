@@ -50,8 +50,10 @@ class ItemDetailFragment : Fragment() {
         val description: TextView = binding.description
         val startDate: TextView = binding.startDate
         val endDate: TextView = binding.endDate
-        val pickupDateButton: Button = binding.pickupDateButton
-        val pickupDate: TextView = binding.pickupDate
+        val startDateButton: Button = binding.startDateBookingButton
+        val endDateButton: Button = binding.endDateBookingButton
+        val startDateBooking: TextView = binding.startDateBooking
+        val endDateBooking: TextView = binding.endDateBooking
 
         item?.let {
             title.text = it.getTitle()
@@ -75,8 +77,9 @@ class ItemDetailFragment : Fragment() {
         }
 
 
+
         //todo omzetten naar boekingdatum opslaan ipv availibilitydatums
-        pickupDateButton.setOnClickListener{
+        startDateButton.setOnClickListener{
             val datePickerDialog = this.context?.let { it1 ->
                 DatePickerDialog(
                     it1, { DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
@@ -94,7 +97,33 @@ class ItemDetailFragment : Fragment() {
                         item?.setStartDate(LocalDate.of(year, monthOfYear, dayOfMonth).toString())
                         itemId?.let { it2 -> FireBaseCommunication().updateItem(item!!, it2) }
 
-                        pickupDate.text = item?.getStartDate().toString()
+                        startDateBooking.text = item?.getStartDate().toString()
+                    },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+                )
+            }
+            datePickerDialog?.show()
+        }
+        endDateButton.setOnClickListener{
+            val datePickerDialog = this.context?.let { it1 ->
+                DatePickerDialog(
+                    it1, { DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
+                        val selectedDate = Calendar.getInstance()
+                        selectedDate.set(year, monthOfYear, dayOfMonth)
+                        var itemId: String? = null
+                        runBlocking {
+                            launch {
+                                itemId = item?.let { it2 -> FireBaseCommunication().getItemId(it2) }
+                            }
+                                .join()
+                        }
+
+                        item?.setStartDate(LocalDate.of(year, monthOfYear, dayOfMonth).toString())
+                        itemId?.let { it2 -> FireBaseCommunication().updateItem(item!!, it2) }
+
+                        endDateBooking.text = item?.getStartDate().toString()
                     },
                     calendar.get(Calendar.YEAR),
                     calendar.get(Calendar.MONTH),

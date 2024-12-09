@@ -7,9 +7,9 @@
         android:title="@string/search_item"
         />
     <item
-        android:id="@+id/navigation_message"
-        android:icon="@drawable/comment"
-        android:title="@string/messages"
+        android:id="@+id/navigation_booking"
+        android:icon="@drawable/bookinglogo"
+        android:title="@string/bookings"
         />
     <item
         android:id="@+id/navigation_home"

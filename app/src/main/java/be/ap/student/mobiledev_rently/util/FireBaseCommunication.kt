@@ -184,16 +184,19 @@ class FireBaseCommunication {
 
     suspend fun getBookingsYourItems(userId: String): List<Booking>{
         try {
-            val task = bookings.whereEqualTo("owner", "users/${userId}").get()
+            val task = bookings.whereEqualTo("owner", "/users/${userId}").get()
             task.await()
             val bookings = LinkedList<Booking>()
             if (task.result.size() == 0) return bookings
             for(booking in task.result) {
                 bookings.add(Booking(
                     StateType.valueOf(booking.getString("title").toString()), booking.getString("startDate"),
-                    booking.getString("endDate"), booking.getField("messages"),
+                    booking.getString("endDate"),
                     booking.getString("owner"), booking.getString("rentee"),
-                    booking.getString("item")))
+                    booking.getString("item"), booking.getString("itemImage")
+                    ,booking.getString("itemName")
+
+                ))
             }
             return bookings
         } catch (e: Exception) {
@@ -203,21 +206,53 @@ class FireBaseCommunication {
 
     suspend fun getImage(downloadPath: String): String? {
         return try {
-            // Get a reference to the file in Firebase Storage
             val fileRef = FirebaseStorage.getInstance().reference.child(downloadPath)
 
-            // Fetch the download URL (this suspends until the URL is retrieved)
             val url = fileRef.downloadUrl.await()
-            url.toString() // Return the download URL as a string
+            url.toString()
         } catch (e: Exception) {
             e.printStackTrace()
-            null // Return null if an error occurs
+            null
         }
     }
     suspend fun getBookingsByItem(item: Item): List<Booking>{
         try {
             val itemId = getItemId(item) ?: return emptyList()
             val task = bookings.whereEqualTo("item", "/items/${itemId}").get()
+            task.await()
+            val bookings = LinkedList<Booking>()
+            if (task.result.size() == 0) return bookings
+            task.result.forEach {
+                bookings.add(it.toObject(Booking::class.java))
+            }
+            return bookings
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    suspend fun getBookingsByRentee(email: String): List<Booking>{
+        try {
+            val userId = getUserID(email) ?: return emptyList()
+            val task = bookings.whereEqualTo("rentee", "/users/${userId}").get()
+            task.await()
+            Log.d("FirebaseQuery", "Bookings result size: ${task.result.size()}")
+
+            val bookings = LinkedList<Booking>()
+            if (task.result.size() == 0) return bookings
+            task.result.forEach {
+                bookings.add(it.toObject(Booking::class.java))
+            }
+            return bookings
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    suspend fun getBookingsByOwner(email: String): List<Booking>{
+        try {
+            val userId = getUserID(email) ?: return emptyList()
+            val task = bookings.whereEqualTo("owner", "/users/${userId}").get()
             task.await()
             val bookings = LinkedList<Booking>()
             if (task.result.size() == 0) return bookings

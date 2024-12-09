@@ -46,7 +46,6 @@ class ProfileFragment : Fragment() {
     ): View? {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
         val view = binding.root
-
         binding.root
 
         val usernameTextView: TextView = binding.usernameValue
