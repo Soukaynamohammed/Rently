@@ -8,9 +8,20 @@
         <EditText
             android:id="@+id/searchInput"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="50dp"
             android:textColorHint="@color/black"
             android:hint="Search item..."
+            android:textColor="@color/black"
+            android:padding="16dp"
+            android:background="@color/white"
+            android:elevation="4dp" />
+        <EditText
+            android:id="@+id/searchCategoryInput"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="51dp"
+            android:textColorHint="@color/black"
+            android:hint="Search category..."
             android:textColor="@color/black"
             android:padding="16dp"
             android:background="@color/white"
@@ -19,10 +30,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <com.google.android.material.slider.Slider
             android:layout_width="310dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="106dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:valueFrom="1"
@@ -35,7 +47,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="95dp"
+            android:layout_marginTop="120dp"
+
             android:text="@string/_20km"
             android:id="@+id/sliderValue"
             android:textColor="@color/black"
@@ -44,13 +57,13 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="140dp" />
+        android:layout_height="367dp"
+        android:layout_marginVertical="163dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="140dp"
+        android:layout_marginRight="20dp" />
 
 
 
