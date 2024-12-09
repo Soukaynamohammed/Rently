@@ -21,14 +21,18 @@ import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
+import android.text.Editable
+import android.text.TextWatcher
+import be.ap.student.mobiledev_rently.dataClasses.Item
+
+
 class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
     private lateinit var firebaseCommunication: FireBaseCommunication
     private lateinit var adapter: SearchAdapter
     private var distance: Int = 20
-
     private var userId: String? = null
-
+    private var itemList = listOf<Item>() // Store the original list of items
     var user: User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,14 +40,14 @@ class SearchFragment : Fragment() {
         arguments?.let {
             user = it.getParcelable("user", User::class.java)
             runBlocking {
-                launch{
+                launch {
                     getLocation()
-                }
-                    .join()
+                }.join()
             }
         }
         firebaseCommunication = FireBaseCommunication()
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,11 +56,9 @@ class SearchFragment : Fragment() {
         val view = binding.root
 
         user?.let {
-            // Fetch user ID and load items after it's fetched
             lifecycleScope.launch {
                 userId = firebaseCommunication.getUserID(user!!.getEmail().toString())
                 if (userId != null) {
-                    // Only load items after the userId is properly fetched
                     loadItems()
                 } else {
                     Log.e("SearchFragment", "Failed to fetch userId")
@@ -64,105 +66,118 @@ class SearchFragment : Fragment() {
             }
         }
 
-
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Pass the fragment manager to the adapter
         adapter = SearchAdapter(parentFragmentManager)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
+        // Listen for slider changes
         binding.slider.addOnChangeListener { _, value, _ ->
             binding.sliderValue.text = "${value.toInt()} km"
             distance = value.toInt()
-            loadItems()
+            filterItems(binding.searchInput.text.toString(), binding.searchCategoryInput.text.toString())
         }
 
-        // Load items
+        // **Listen for text changes in the search input (product name)**
+        binding.searchInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                filterItems(s.toString(), binding.searchCategoryInput.text.toString())
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+        // **Listen for text changes in the search input (category)**
+        binding.searchCategoryInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                filterItems(binding.searchInput.text.toString(), s.toString())
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
         loadItems()
     }
 
     private fun loadItems() {
         lifecycleScope.launch {
             try {
-                val items = FireBaseCommunication().getItemsSearchItems(userId.toString())
-                val result = items.filter { compare(getDistanceBetweenPoints(it.getLocation()!!, user?.getLocation()!!), distance.toDouble()) }
-                adapter.submitList(result)
+                // Get the full list of items (this will be filtered later)
+                itemList = firebaseCommunication.getItemsSearchItems(userId.toString())
+                filterItems(binding.searchInput.text.toString(), binding.searchCategoryInput.text.toString())
             } catch (e: Exception) {
                 Log.e("LoadItems", "Error loading items: ${e.message}")
             }
         }
     }
 
-    private fun compare(distance: Double?, maxDistance: Double?): Boolean{
-        Log.d("distance", distance.toString())
-        Log.d("maxDistance", maxDistance.toString())
-        Log.d("compare", (distance!! <= maxDistance!!).toString())
-        return distance <= maxDistance
+    /**
+     * Filters the list of items based on the search query, category, and distance.
+     */
+    private fun filterItems(productQuery: String, categoryQuery: String) {
+        val filteredList = itemList.filter { item ->
+            // Check if the item's title contains the product search query (case-insensitive)
+            val matchesSearchQuery = item.getTitle()!!.contains(productQuery, ignoreCase = true)
+            // Check if the item's category contains the category search query (case-insensitive)
+            val matchesCategoryQuery = item.getCategory()!!.contains(categoryQuery, ignoreCase = true)
+            // Check if the item's distance is within the selected range
+            val isWithinDistance = compare(getDistanceBetweenPoints(item.getLocation()!!, user?.getLocation()!!), distance.toDouble())
+
+            matchesSearchQuery && matchesCategoryQuery && isWithinDistance
+        }
+        adapter.submitList(filteredList)
+    }
+
+    private fun compare(distance: Double?, maxDistance: Double?): Boolean {
+        return distance != null && maxDistance != null && distance <= maxDistance
     }
 
     private fun getDistanceBetweenPoints(point1: GeoPoint, point2: GeoPoint): Double {
         val result = FloatArray(1)
-        Location.distanceBetween(point1.latitude, point2.longitude, point2.latitude, point2.longitude, result)
-        return (result[0]/1000).toDouble()
+        Location.distanceBetween(point1.latitude, point1.longitude, point2.latitude, point2.longitude, result)
+        return (result[0] / 1000).toDouble()
     }
-
-
 
     private fun getLocation() {
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         if (this.context?.let {
-                ActivityCompat.checkSelfPermission(
-                    it,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                )
+                ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION)
             } != PackageManager.PERMISSION_GRANTED && this.context?.let {
-                ActivityCompat.checkSelfPermission(
-                    it,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
+                ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_COARSE_LOCATION)
             } != PackageManager.PERMISSION_GRANTED
         ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return
         }
+
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location: Location? ->
-                // Got last known location. In this place, we can only use the location object if it is non-null.
                 if (location != null) {
-                    // Use the location object (latitude, longitude, etc.)
                     val latitude = location.latitude
                     val longitude = location.longitude
-                    // ... do something with the location ...
                     user?.setLocation(GeoPoint(latitude, longitude))
-                } else {
-                    // Location is null, handle accordingly (e.g., request location updates)
                 }
             }
             .addOnFailureListener { exception: Exception ->
-                // Handle any errors that occurred while getting the location
-                Log.e("HomeFragment", "Error getting location: ${exception.message}")
+                Log.e("SearchFragment", "Error getting location: ${exception.message}")
             }
     }
 
     companion object {
-        fun newInstance(user: User?) =
-            SearchFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable("user", user)
-                }
+        fun newInstance(user: User?) = SearchFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable("user", user)
             }
+        }
     }
 }
