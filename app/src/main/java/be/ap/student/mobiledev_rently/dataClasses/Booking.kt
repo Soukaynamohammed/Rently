@@ -13,18 +13,39 @@ class Booking() : Parcelable {
     private var bookingState: StateType? = null
     private var startDate: String? = null
     private var endDate: String? = null
-    private var messages: List<Message>? = LinkedList<Message>()
     private var owner: String? = null
     private var rentee: String? = null
     private var item: String? = null
-    constructor(bookingState: StateType?, startDate: String?, endDate: String?, messages: List<Message>?, owner: String?, rentee: String?, item: String?) : this() {
+    private var itemImage: String? = null
+    private var itemName: String? = null
+
+
+
+    constructor(bookingState: StateType?, startDate: String?, endDate: String?, owner: String?, rentee: String?, item: String?, itemImage: String?,itemName: String? ) : this() {
         this.bookingState = bookingState
         this.startDate = startDate
         this.endDate = endDate
-        this.messages = messages
         this.owner = owner
         this.rentee = rentee
         this.item = item
+        this.itemImage = itemImage
+        this.itemName = itemName
+    }
+
+    fun getItemName(): String? {
+        return itemName
+    }
+
+    fun setItemName(itemName: String?) {
+        this.itemName = itemName
+    }
+
+    fun getItemImage(): String? {
+        return itemImage
+    }
+
+    fun setItemImage(itemImage: String?) {
+        this.itemImage = itemImage
     }
     fun getBookingState(): StateType? {
         return bookingState
@@ -43,12 +64,6 @@ class Booking() : Parcelable {
     }
     fun setEndDate(endDate: String){
         this.endDate = endDate
-    }
-    fun getMessages(): List<Message>?{
-        return messages
-    }
-    fun setMessages(messages: List<Message>){
-        this.messages = messages
     }
     fun getOwner(): String?{
         return owner
@@ -71,31 +86,73 @@ class Booking() : Parcelable {
 
     companion object : Parceler<Booking> {
         override fun create(parcel: Parcel): Booking {
-            val read = parcel.readString().toString()
+            val read = parcel.readString() ?: ""  // Avoid nullability issues
             val bookingState = StateType.valueOf(read)
             Log.d("booking", "create: $read")
-            val startDate = parcel.readString()?:""
-            val endDate = parcel.readString()?:""
-            val messages = parcel.readArray(
-                ClassLoader.getSystemClassLoader(),
-                Message::class.java
-            )?.toList()
+
+            val startDate = parcel.readString() ?: ""
+            val endDate = parcel.readString() ?: ""
+
+
             val owner = parcel.readString()
             val rentee = parcel.readString()
             val item = parcel.readString()
-            return Booking(bookingState, startDate, endDate, messages, owner, rentee, item)
+
+            // NEW: Read itemImage and itemName from the Parcel
+            val itemImage = parcel.readString()
+            val itemName = parcel.readString()
+
+            return Booking(bookingState, startDate, endDate, owner, rentee, item, itemImage, itemName)
         }
 
         override fun Booking.write(parcel: Parcel, flags: Int) {
+            // Write in the same order as you read in `create()`
             parcel.writeString(bookingState.toString())
             parcel.writeString(startDate)
             parcel.writeString(endDate)
-            parcel.writeArray(arrayOf(messages))
+
+
             parcel.writeString(owner)
             parcel.writeString(rentee)
             parcel.writeString(item)
-        }
 
+            // NEW: Write itemImage and itemName to the Parcel
+            parcel.writeString(itemImage)
+            parcel.writeString(itemName)
+        }
     }
+
+//    companion object : Parceler<Booking> {
+//        override fun create(parcel: Parcel): Booking {
+//            val read = parcel.readString().toString()
+//            val bookingState = StateType.valueOf(read)
+//            Log.d("booking", "create: $read")
+//            val startDate = parcel.readString()?:""
+//            val endDate = parcel.readString()?:""
+//            val messages = parcel.readArray(
+//                ClassLoader.getSystemClassLoader(),
+//                Message::class.java
+//            )?.toList()
+//            val owner = parcel.readString()
+//            val rentee = parcel.readString()
+//            val item = parcel.readString()
+//            return Booking(bookingState, startDate, endDate, messages, owner, rentee, item, null, null)
+//        }
+//
+//
+//
+//        override fun Booking.write(parcel: Parcel, flags: Int) {
+//            parcel.writeString(bookingState.toString())
+//            parcel.writeString(startDate)
+//            parcel.writeString(endDate)
+//            parcel.writeArray(arrayOf(messages))
+//            parcel.writeString(owner)
+//            parcel.writeString(rentee)
+//            parcel.writeString(item)
+//            parcel.writeString(itemImage)
+//            parcel.writeString(itemName)
+//        }
+//
+//    }
 
 }

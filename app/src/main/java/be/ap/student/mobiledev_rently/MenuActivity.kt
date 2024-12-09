@@ -25,8 +25,9 @@ class MenuActivity : AppCompatActivity() {
                     loadFragment(searchFragment)
                     true
                 }
-                R.id.navigation_message->{
-                    loadFragment(MessagesFragment())
+                R.id.navigation_booking->{
+                    val allBookingsFragment = AllBookingsFragment.newInstance(user)
+                    loadFragment(allBookingsFragment)
                     true
                 }
                 R.id.navigation_home->{

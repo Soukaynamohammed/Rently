@@ -121,16 +121,11 @@ class SearchFragment : Fragment() {
         }
     }
 
-    /**
-     * Filters the list of items based on the search query, category, and distance.
-     */
+
     private fun filterItems(productQuery: String, categoryQuery: String) {
         val filteredList = itemList.filter { item ->
-            // Check if the item's title contains the product search query (case-insensitive)
             val matchesSearchQuery = item.getTitle()!!.contains(productQuery, ignoreCase = true)
-            // Check if the item's category contains the category search query (case-insensitive)
             val matchesCategoryQuery = item.getCategory()!!.contains(categoryQuery, ignoreCase = true)
-            // Check if the item's distance is within the selected range
             val isWithinDistance = compare(getDistanceBetweenPoints(item.getLocation()!!, user?.getLocation()!!), distance.toDouble())
 
             matchesSearchQuery && matchesCategoryQuery && isWithinDistance
