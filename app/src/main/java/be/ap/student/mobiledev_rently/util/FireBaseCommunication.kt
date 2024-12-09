@@ -82,25 +82,6 @@ class FireBaseCommunication {
         }
     }
 
-    suspend fun getItems(): List<Item> {
-        try {
-            val task = items.get()
-            task.await()
-            val items = LinkedList<Item>()
-            if (task.result.size() == 0) return items
-            for(item in task.result) {
-                items.add(Item(item.getString("title"), item.getString("category"),
-                    item.getString("description"), item.getString("image"),
-                    item.getGeoPoint("location"), item.getString("owner"),
-                    item.getDouble("price"), item.getString("startDate")?:"",
-                    item.getString("endDate")?:""))
-            }
-            return items
-        } catch (e: Exception) {
-            throw e
-        }
-    }
-
     suspend fun getItemsSearchItems(currentUserId: String): List<Item> {
         try {
             val task = items.whereNotEqualTo("owner","/users/$currentUserId").get()

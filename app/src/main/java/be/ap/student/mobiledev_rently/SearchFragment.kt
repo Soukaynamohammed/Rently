@@ -14,7 +14,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import be.ap.student.mobiledev_rently.adapter.SearchAdapter
 import be.ap.student.mobiledev_rently.dataClasses.User
-import be.ap.student.mobiledev_rently.databinding.FragmentProfileBinding
 import be.ap.student.mobiledev_rently.databinding.FragmentSearchBinding
 import be.ap.student.mobiledev_rently.util.FireBaseCommunication
 import com.google.android.gms.location.LocationServices
@@ -26,6 +25,7 @@ class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
     private lateinit var firebaseCommunication: FireBaseCommunication
     private lateinit var adapter: SearchAdapter
+    private var distance: Int = 20
 
     private var userId: String? = null
 
@@ -47,10 +47,9 @@ class SearchFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
         val view = binding.root
-        binding.root
 
         user?.let {
             // Fetch user ID and load items after it's fetched
@@ -78,6 +77,12 @@ class SearchFragment : Fragment() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
+        binding.slider.addOnChangeListener { _, value, _ ->
+            binding.sliderValue.text = "${value.toInt()} km"
+            distance = value.toInt()
+            loadItems()
+        }
+
         // Load items
         loadItems()
     }
@@ -86,13 +91,26 @@ class SearchFragment : Fragment() {
         lifecycleScope.launch {
             try {
                 val items = FireBaseCommunication().getItemsSearchItems(userId.toString())
-                adapter.submitList(items)
+                val result = items.filter { compare(getDistanceBetweenPoints(it.getLocation()!!, user?.getLocation()!!), distance.toDouble()) }
+                adapter.submitList(result)
             } catch (e: Exception) {
                 Log.e("LoadItems", "Error loading items: ${e.message}")
             }
         }
     }
 
+    private fun compare(distance: Double?, maxDistance: Double?): Boolean{
+        Log.d("distance", distance.toString())
+        Log.d("maxDistance", maxDistance.toString())
+        Log.d("compare", (distance!! <= maxDistance!!).toString())
+        return distance <= maxDistance
+    }
+
+    private fun getDistanceBetweenPoints(point1: GeoPoint, point2: GeoPoint): Double {
+        val result = FloatArray(1)
+        Location.distanceBetween(point1.latitude, point2.longitude, point2.latitude, point2.longitude, result)
+        return (result[0]/1000).toDouble()
+    }
 
 
 
