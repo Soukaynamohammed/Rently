@@ -6,6 +6,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ChangeProfileFragment">
 
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:background="@color/background"
+        android:layout_height="match_parent">
     <LinearLayout
         android:id="@+id/change_profile"
         android:layout_width="match_parent"
@@ -13,7 +18,6 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         >
-
 
         <androidx.cardview.widget.CardView
             android:id="@+id/profileCard"
@@ -189,5 +193,5 @@
 
 
     </LinearLayout>
-
+    </ScrollView>
 </FrameLayout>

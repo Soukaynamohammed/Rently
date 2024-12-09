@@ -86,10 +86,17 @@ class AddItemFragment : Fragment() {
         item = Item()
 
 
+//        val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+//            uri?.let {
+//                selectedImageUri = it
+//                imageView.setImageURI(it)
+//            }
+//        }
+
         val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let {
-                selectedImageUri = it
                 imageView.setImageURI(it)
+                uploadImage(it)
             }
         }
 
@@ -205,15 +212,8 @@ class AddItemFragment : Fragment() {
                         .join()
                 }
             }
-            if (selectedImageUri != null) {
-                uploadImage(selectedImageUri!!) { imageUrl ->
-                    item?.setImage(imageUrl)
-                }
-            }
             saveItem()
         }
-
-        //todo : add location permissions or someting
 
         binding.locationButton.setOnClickListener {
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.activity as Activity)
@@ -314,31 +314,34 @@ class AddItemFragment : Fragment() {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 50, outputStream) // Compress to 50% quality
         return outputStream.toByteArray()
     }
-    private fun uploadImage(uri: Uri, callback: (String?) -> Unit) {
-        val fileName = "item_images/${System.currentTimeMillis()}.jpg" // Unique filename using timestamp
-        val fileRef = storageRef.child(fileName)
-        isUploadInProgress = true
 
-        val compressedImage = compressImage(uri)
 
-        fileRef.putBytes(compressedImage)
-            .addOnSuccessListener {
-                fileRef.downloadUrl.addOnSuccessListener { downloadUri ->
-                    Log.d("FirebaseUpload", "Download URL: $downloadUri")
-                    callback(downloadUri.toString()) // Call the callback with the download URL
-                    isUploadInProgress = false
-                }.addOnFailureListener { exception ->
-                    Log.e("FirebaseUpload", "Failed to get download URL: ${exception.message}")
-                    callback(null) // If there's an error, return null
-                    isUploadInProgress = false
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.e("FirebaseUpload", "Image upload failed: ${exception.message}")
-                callback(null) // If there's an error, return null
-                isUploadInProgress = false
-            }
-    }
+
+//    private fun uploadImage(uri: Uri, callback: (String?) -> Unit) {
+//        val fileName = "item_images/${System.currentTimeMillis()}.jpg" // Unique filename using timestamp
+//        val fileRef = storageRef.child(fileName)
+//        isUploadInProgress = true
+//
+//        val compressedImage = compressImage(uri)
+//
+//        fileRef.putBytes(compressedImage)
+//            .addOnSuccessListener {
+//                fileRef.downloadUrl.addOnSuccessListener { downloadUri ->
+//                    Log.d("FirebaseUpload", "Download URL: $downloadUri")
+//                    callback(downloadUri.toString()) // Call the callback with the download URL
+//                    isUploadInProgress = false
+//                }.addOnFailureListener { exception ->
+//                    Log.e("FirebaseUpload", "Failed to get download URL: ${exception.message}")
+//                    callback(null) // If there's an error, return null
+//                    isUploadInProgress = false
+//                }
+//            }
+//            .addOnFailureListener { exception ->
+//                Log.e("FirebaseUpload", "Image upload failed: ${exception.message}")
+//                callback(null) // If there's an error, return null
+//                isUploadInProgress = false
+//            }
+//    }
 
 
     private fun uploadImage(uri: Uri) {

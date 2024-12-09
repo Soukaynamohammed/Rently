@@ -99,7 +99,7 @@ class ProfileFragment : Fragment() {
             user?.let {
 
                 parentFragmentManager.beginTransaction()
-                    .add(R.id.container, ChangeProfileFragment.newInstance(it))
+                    .replace(R.id.container, ChangeProfileFragment.newInstance(it))
                     .addToBackStack(null)
                     .commit()
 
