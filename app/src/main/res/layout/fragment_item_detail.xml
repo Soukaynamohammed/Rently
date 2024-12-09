@@ -288,6 +288,10 @@
                 android:layout_marginStart="20dp"
                 >
             </TextView>
+            <org.osmdroid.views.MapView
+                android:id="@+id/osmmap"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"/>
 
         </LinearLayout>
     </ScrollView>
