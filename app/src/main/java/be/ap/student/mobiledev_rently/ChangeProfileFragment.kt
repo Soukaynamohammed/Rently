@@ -19,12 +19,18 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import be.ap.student.mobiledev_rently.dataClasses.LocationXml
 import be.ap.student.mobiledev_rently.dataClasses.User
 import be.ap.student.mobiledev_rently.databinding.FragmentChangeProfileBinding
 import be.ap.student.mobiledev_rently.util.FireBaseCommunication
 import com.bumptech.glide.Glide
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.MapperFeature
+import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule
+import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.Firebase
@@ -87,6 +93,14 @@ class ChangeProfileFragment : Fragment() {
             nameEditText.setText(it.getUsername())
             emailEditText.setText(it.getEmail())
 
+            if (it.getLocation() != null) {
+                location = it.getLocation()
+                runBlocking {
+                    launch(Dispatchers.IO) {
+                        getLocationReverse(location!!)
+                    }
+                }
+            }
             if (it.getImageUrl() != "") {
                 loadImageFromFirebase(it.getImageUrl()!!, imageView)
                 Glide.with(this)
@@ -129,6 +143,12 @@ class ChangeProfileFragment : Fragment() {
             }
             fusedLocationClient.lastLocation.addOnSuccessListener {
                 location = GeoPoint(it.latitude, it.longitude)
+                runBlocking {
+                    launch(Dispatchers.IO) {
+                        getLocationReverse(location!!)
+                    }.join()
+                }
+
             }
         }
 
@@ -164,6 +184,35 @@ class ChangeProfileFragment : Fragment() {
 
         return view;
     }
+
+    private fun getLocationReverse(location: GeoPoint){
+        val client = OkHttpClient()
+        val request: Request = Request.Builder()
+            .url("https://nominatim.openstreetmap.org/reverse?lat=${location.latitude}&lon=${location.longitude}&zoom=18")
+            .method("GET", null)
+            .addHeader("Content-Type", "application/json")
+            .addHeader("Accept", "application/json")
+            .addHeader("User-Agent", "Rently/1.0")
+            .build()
+        try{
+            val response: Response = client.newCall(request).execute()
+            val model = parseAs<LocationXml>(response.body?.string().toString())
+            binding.location.setText("${model.addressparts?.city?:""}, ${model.addressparts?.road?:""} ${model.addressparts?.number?:""}")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private inline fun <reified T : Any> parseAs(resource: String): T {
+        return kotlinXmlMapper.readValue(resource)
+    }
+
+    private val kotlinXmlMapper = XmlMapper(JacksonXmlModule().apply {
+        setDefaultUseWrapper(false)
+    }).registerKotlinModule()
+        .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+
 
     private fun getLocation(address: String): GeoPoint {
         val client = OkHttpClient()
