@@ -19,7 +19,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/profileCard"
             android:layout_width="411dp"
-            android:layout_height="410dp"
+            android:layout_height="500dp"
             android:layout_margin="16dp"
             android:backgroundTint="#FFFFFF">
 
@@ -27,7 +27,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/profileCardBeige"
                 android:layout_width="411dp"
-                android:layout_height="230dp"
+                android:layout_height="350dp"
                 android:layout_marginTop="150dp"
                 android:backgroundTint="#ECE5DC">
 
@@ -49,7 +49,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="50dp"
                     android:textColor="@color/black"
                     android:textSize="18sp"
 
@@ -63,7 +63,7 @@
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:layout_marginLeft="30dp"
-                    android:layout_marginTop="80dp"
+                    android:layout_marginTop="90dp"
                     android:text="Email" />
 
                 <TextView
@@ -71,7 +71,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
-                    android:layout_marginTop="120dp"
+                    android:layout_marginTop="130dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
+                    android:text="" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="170dp"
+                    android:text="Location" />
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="210dp"
                     android:textSize="18sp"
                     android:textColor="@color/black"
                     android:text="" />
@@ -82,7 +101,7 @@
                     android:layout_height="50dp"
                     android:backgroundTint="@color/black"
                     android:layout_marginLeft="30dp"
-                    android:layout_marginTop="160dp"
+                    android:layout_marginTop="250dp"
                     android:text="@string/changePassword"
                     >
 

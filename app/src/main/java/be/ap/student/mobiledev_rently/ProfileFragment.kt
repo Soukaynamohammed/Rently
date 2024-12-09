@@ -4,24 +4,34 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toUri
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.Fragment
+import be.ap.student.mobiledev_rently.dataClasses.LocationXml
 import be.ap.student.mobiledev_rently.dataClasses.User
-import be.ap.student.mobiledev_rently.databinding.FragmentChangeProfileBinding
 import be.ap.student.mobiledev_rently.databinding.FragmentProfileBinding
 import com.bumptech.glide.Glide
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.MapperFeature
+import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule
+import com.fasterxml.jackson.dataformat.xml.XmlMapper
+import com.fasterxml.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.google.firebase.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.storage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import org.osmdroid.util.GeoPoint
 import java.io.File
 
 
@@ -53,9 +63,11 @@ class ProfileFragment : Fragment() {
         val editButton: Button = binding.edit
         val changePassButton : Button = binding.changePassword
         val imageView: ImageView = binding.imageView
-
-
-
+        runBlocking {
+            launch(Dispatchers.IO) {
+                getLocationReverse(GeoPoint(user?.getLocation()?.latitude!!, user?.getLocation()?.longitude!!))
+            }
+        }
 
         if (user?.getImageUrl()!!.isNotEmpty())
         {
@@ -101,15 +113,11 @@ class ProfileFragment : Fragment() {
                     .replace(R.id.container, ChangeProfileFragment.newInstance(it))
                     .addToBackStack(null)
                     .commit()
-
-
             }
         }
 
         changePassButton.setOnClickListener{
             user?.let {
-//                Toast.makeText(requireContext(), "Change password button clicked", Toast.LENGTH_SHORT).show()
-
                 parentFragmentManager.beginTransaction()
                     .add(R.id.container, ChangePasswordFragment.newInstance(it))
                     .addToBackStack(null)
@@ -124,16 +132,33 @@ class ProfileFragment : Fragment() {
         return view
 
     }
+private fun getLocationReverse(location: GeoPoint){
+    val client = OkHttpClient()
+    val request: Request = Request.Builder()
+        .url("https://nominatim.openstreetmap.org/reverse?lat=${location.latitude}&lon=${location.longitude}&zoom=18")
+        .method("GET", null)
+        .addHeader("Content-Type", "application/json")
+        .addHeader("Accept", "application/json")
+        .addHeader("User-Agent", "Rently/1.0")
+        .build()
+    try{
+        val response: Response = client.newCall(request).execute()
+        val model = parseAs<LocationXml>(response.body?.string().toString())
+        binding.location.setText("${model.addressparts?.city?:""}, ${model.addressparts?.road?:""} ${model.addressparts?.number?:""}")
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+}
 
-//    private fun loadImageFromFirebase(imageUrl: String, imageView: ImageView) {
-//        val imageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl)
-//        imageRef.getBytes(10 * 1024 * 1024).addOnSuccessListener { bytes ->
-//            val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-//            imageView.setImageBitmap(bitmap)
-//        }.addOnFailureListener { exception ->
-//            Log.e("FirebaseDownload", "Failed to load image: ${exception.message}")
-//        }
-//    }
+    private inline fun <reified T : Any> parseAs(resource: String): T {
+        return kotlinXmlMapper.readValue(resource)
+    }
+
+    private val kotlinXmlMapper = XmlMapper(JacksonXmlModule().apply {
+        setDefaultUseWrapper(false)
+    }).registerKotlinModule()
+        .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     private fun loadImageFromFirebase(imageUrl: String?, imageView: ImageView) {
         if (imageUrl.isNullOrEmpty()) {
