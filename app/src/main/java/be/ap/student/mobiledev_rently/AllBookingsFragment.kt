@@ -1,5 +1,6 @@
 package be.ap.student.mobiledev_rently
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.core.content.ContextCompat
 import be.ap.student.mobiledev_rently.dataClasses.User
 import be.ap.student.mobiledev_rently.databinding.FragmentAllBookingsBinding
 import be.ap.student.mobiledev_rently.databinding.FragmentProfileBinding
@@ -35,25 +37,52 @@ class AllBookingsFragment : Fragment() {
         val myBookingsButton: Button = binding.btnPage1
         val rentalsButton: Button = binding.btnPage2
 
+        user?.let {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, MyBookingsFragment.newInstance(it))
+                .addToBackStack(null)
+                .commit()
+
+            setActiveButton(myBookingsButton, true)
+            setActiveButton(rentalsButton, false)
+        }
+
         myBookingsButton.setOnClickListener{
             user?.let {
                 parentFragmentManager.beginTransaction()
-                    .add(R.id.container, MyBookingsFragment.newInstance(it))
+                    .replace(R.id.fragmentContainerView, MyBookingsFragment.newInstance(it))
                     .addToBackStack(null)
                     .commit()
+
+                setActiveButton(myBookingsButton, true)
+                setActiveButton(rentalsButton, false)
             }
         }
 
         rentalsButton.setOnClickListener{
             user?.let {
                 parentFragmentManager.beginTransaction()
-                    .add(R.id.container, RentalsFragment.newInstance(it))
+                    .replace(R.id.fragmentContainerView, RentalsFragment.newInstance(it))
                     .addToBackStack(null)
                     .commit()
+
+                setActiveButton(myBookingsButton, false)
+                setActiveButton(rentalsButton, true)
             }
         }
 
         return view
+    }
+
+    // Helper function to change button color
+    private fun setActiveButton(button: Button, isActive: Boolean) {
+        if (isActive) {
+            button.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), android.R.color.white)) // White color
+            button.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.black)) // Black text
+        } else {
+            button.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.black)) // Default black color
+            button.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white)) // White text
+        }
     }
 
     companion object {

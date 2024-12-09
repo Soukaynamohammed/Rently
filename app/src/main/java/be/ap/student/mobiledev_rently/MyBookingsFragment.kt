@@ -51,8 +51,8 @@ class MyBookingsFragment : Fragment() {
                 if (!itemId.isNullOrEmpty()) {
                     val item = FireBaseCommunication().getItemById(itemId)
                     item?.let {
-                        booking.setItemName(it.getTitle()) // Set item name in Booking
-                        booking.setItemImage(it.getImage()) // Set item image in Booking
+                        booking.setItemName(it.getTitle())
+                        booking.setItemImage(it.getImage())
                     }
                 }
             }
