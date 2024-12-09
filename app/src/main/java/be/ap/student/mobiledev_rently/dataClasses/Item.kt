@@ -70,13 +70,13 @@ class Item() : Parcelable {
     fun setPrice(price: Double) {
         this.price = price
     }
-    fun getStartDate(): String? {
+    fun getStartDate(): String {
         return startDate
     }
     fun setStartDate(startDate: String){
         this.startDate = startDate
     }
-    fun getEndDate(): String? {
+    fun getEndDate(): String {
         return endDate
     }
     fun setEndDate(endDate: String){

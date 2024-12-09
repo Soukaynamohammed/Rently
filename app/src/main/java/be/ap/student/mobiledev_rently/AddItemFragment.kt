@@ -191,7 +191,6 @@ class AddItemFragment : Fragment() {
                 setCategory(updatedCategory)
                 setDescription(updatedDescription)
                 setOwner("/users/" + userId!!)
-                setLocation(GeoPoint(0.0, 0.0))
                 setStartDate(startDate.text.toString())
                 setEndDate(endDate.text.toString())
             }

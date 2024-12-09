@@ -18,15 +18,15 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/profileCard"
             android:layout_width="411dp"
-            android:layout_height="410dp"
+            android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:backgroundTint="#FFFFFF">
 
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/profileCardBeige"
-                android:layout_width="411dp"
-                android:layout_height="225dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="150dp"
                 android:backgroundTint="#ECE5DC">
 
@@ -69,16 +69,15 @@
 
                 <TextView
                     android:id="@+id/Email"
-                    android:layout_marginTop="110dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
+                    android:layout_marginTop="110dp"
                     android:layout_marginBottom="50dp"
+                    android:text="@string/email"
                     android:textColor="@color/black"
                     android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:text="@string/email"
-                    />
+                    android:textStyle="bold" />
 
 
                 <EditText
@@ -102,9 +101,44 @@
                     android:paddingStart="20dp"
                     android:hint="@string/email"
                     android:textSize="18sp"/>
-
-
-
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="200dp"
+                    android:textSize="18sp"
+                    android:layout_marginStart="30dp"
+                    android:text="@string/location" />
+                <EditText
+                    android:layout_marginLeft="35dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginTop="235dp"
+                    android:id="@+id/location"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    android:background="#FFFFFF"
+                    app:boxBackgroundMode="filled"
+                    app:boxBackgroundColor="@color/white"
+                    app:boxStrokeColor="@color/black"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="@string/address"
+                    android:textColor="@color/black"
+                    android:paddingStart="20dp"
+                    android:textSize="16sp"/>
+                <Button
+                    android:id="@+id/locationButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="300dp"
+                    android:layout_marginBottom="20dp"
+                    android:text="@string/automatic_loction"
+                    android:textColor="@color/button_text"
+                    android:backgroundTint="@color/button_background"
+                    >
+                </Button>
 
             </androidx.cardview.widget.CardView>
 

@@ -1,11 +1,14 @@
 package be.ap.student.mobiledev_rently
 
+import android.Manifest
+import android.app.Activity
+import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,30 +16,38 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import be.ap.student.mobiledev_rently.dataClasses.User
 import be.ap.student.mobiledev_rently.databinding.FragmentChangeProfileBinding
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toUri
 import be.ap.student.mobiledev_rently.util.FireBaseCommunication
 import com.bumptech.glide.Glide
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.storage
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.lang.System.out
 
 
 class ChangeProfileFragment : Fragment() {
     private var user: User? = null
     private lateinit var binding: FragmentChangeProfileBinding
-    private var selectedImageUri: Uri? = null
     private val storageRef = Firebase.storage.reference
     private var isUploadInProgress = false
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var location: GeoPoint? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +61,7 @@ class ChangeProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentChangeProfileBinding.inflate(inflater, container, false)
         val view = binding.root
 
@@ -98,7 +109,28 @@ class ChangeProfileFragment : Fragment() {
             pickImageLauncher.launch("image/*")
         }
 
-
+        binding.locationButton.setOnClickListener {
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.activity as Activity)
+            if (ActivityCompat.checkSelfPermission(
+                    this.context as Context,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    this.context as Context,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+            }
+            fusedLocationClient.lastLocation.addOnSuccessListener {
+                location = GeoPoint(it.latitude, it.longitude)
+            }
+        }
 
         saveButton.setOnClickListener {
             if (isUploadInProgress) {
@@ -111,10 +143,18 @@ class ChangeProfileFragment : Fragment() {
                 val oldEmail = it.getEmail()
                 it.setUsername(nameEditText.text.toString())
                 it.setEmail(emailEditText.text.toString())
-
+                if (location != null) {
+                    user?.setLocation(location!!)
+                } else if( binding.location.text.toString() != ""){
+                    runBlocking {
+                        launch(Dispatchers.IO) {
+                            user?.setLocation(getLocation(binding.location.text.toString()))
+                        }
+                            .join()
+                    }
+                }
                 updateUserInFirebase(it, oldEmail)
             }
-
             val profileFragment = ProfileFragment.newInstance(user)
             parentFragmentManager.beginTransaction()
                 .replace(R.id.container, profileFragment)
@@ -125,6 +165,27 @@ class ChangeProfileFragment : Fragment() {
         return view;
     }
 
+    private fun getLocation(address: String): GeoPoint {
+        val client = OkHttpClient()
+        val request: Request = Request.Builder()
+            .url("https://nominatim.openstreetmap.org/search?format=json&q=$address")
+            .method("GET", null)
+            .addHeader("Content-Type", "application/json")
+            .addHeader("Accept", "application/json")
+            .addHeader("User-Agent", "Rently/1.0")
+            .build()
+        try{
+            val response: Response = client.newCall(request).execute()
+
+            val mapper = jacksonObjectMapper()
+            val model: List<Map<String, Any>> = mapper.readValue(response.body?.string().toString())
+            Log.d("tag", "getLocation: lat = ${model[0]["lat"]}, lon = ${model[0]["lon"]}")
+            return GeoPoint(model[0]["lat"].toString().toDouble(), model[0]["lon"].toString().toDouble())
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return GeoPoint(0.0, 0.0)
+        }
+    }
 
 
     private fun uploadImageToFirebase(uri: Uri, callback: (String) -> Unit) {
