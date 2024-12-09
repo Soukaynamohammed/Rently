@@ -39,6 +39,9 @@ android {
 }
 
 dependencies {
+    implementation ("org.osmdroid:osmdroid-android:6.1.14")
+    implementation ("javax.xml.stream:stax-api:1.0-2")
+    implementation ("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.15.0")
     implementation ("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.0")
     implementation ("com.squareup.okhttp3:okhttp:4.12.0")
     implementation ("com.google.android.material:material:1.9.0")

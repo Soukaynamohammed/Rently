@@ -41,4 +41,5 @@
     <string name="automatic_loction">Automatic Loction</string>
     <string name="address">Address</string>
     <string name="_20km">20km</string>
+    <string name="city">City</string>
 </resources>

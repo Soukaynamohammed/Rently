@@ -279,9 +279,10 @@
                     />
             </androidx.cardview.widget.CardView>
             <TextView
+                android:id="@+id/city"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="City"
+                android:text="@string/city"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 android:textSize="17sp"
@@ -289,6 +290,10 @@
                 android:layout_marginStart="20dp"
                 >
             </TextView>
+            <org.osmdroid.views.MapView
+                android:id="@+id/osmmap"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"/>
 
         </LinearLayout>
     </ScrollView>
