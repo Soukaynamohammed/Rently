@@ -13,10 +13,8 @@ import be.ap.student.mobiledev_rently.databinding.SingleItemSearchItemsBinding
 import com.bumptech.glide.Glide
 
 class SearchAdapter(private val parentFragmentManager: FragmentManager) : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
-    private lateinit var binding: SingleItemSearchItemsBinding
-    private var itemList = listOf<Item>()
-//    private lateinit var parentFragmentManager: FragmentManager
 
+    private var itemList = listOf<Item>()
 
     fun submitList(items: List<Item>) {
         itemList = items
@@ -24,7 +22,7 @@ class SearchAdapter(private val parentFragmentManager: FragmentManager) : Recycl
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
-        binding = SingleItemSearchItemsBinding.inflate(
+        val binding = SingleItemSearchItemsBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
         return SearchViewHolder(binding)
@@ -33,17 +31,10 @@ class SearchAdapter(private val parentFragmentManager: FragmentManager) : Recycl
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         val item = itemList[position]
         holder.bind(item)
-        binding.editButton.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.container, ItemDetailFragment.newInstance(item))
-                .addToBackStack(null)
-                .commit()
-        }
     }
 
     override fun getItemCount(): Int = itemList.size
 
-    // **Define the SearchViewHolder as an inner class**
     inner class SearchViewHolder(private val binding: SingleItemSearchItemsBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -55,7 +46,18 @@ class SearchAdapter(private val parentFragmentManager: FragmentManager) : Recycl
                 .load(item.getImage() ?: R.drawable.default_item)
                 .into(binding.itemImage)
 
+            binding.editButton.setOnClickListener {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.container, ItemDetailFragment.newInstance(item))
+                    .addToBackStack(null)
+                    .commit()
+            }
+
             binding.root.setOnClickListener {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.container, ItemDetailFragment.newInstance(item))
+                    .addToBackStack(null)
+                    .commit()
             }
         }
     }
