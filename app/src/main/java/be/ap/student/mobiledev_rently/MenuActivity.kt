@@ -30,7 +30,8 @@ class MenuActivity : AppCompatActivity() {
                     true
                 }
                 R.id.navigation_home->{
-                    loadFragment(HomeFragment())
+                    val homeFragment = HomeFragment.newInstance(user)
+                    loadFragment(homeFragment)
                     true
                 }
                 R.id.navigation_my_items->{
@@ -45,16 +46,15 @@ class MenuActivity : AppCompatActivity() {
                 }
 
                 else -> {
-                    loadFragment(HomeFragment())
+                    val homeFragment = HomeFragment.newInstance(user)
+                    loadFragment(homeFragment)
                     true
                 }
             }
         }
     }
 
-    fun getUser(): User? { return this.user }
-
-    public fun loadFragment(fragment: Fragment){
+    private fun loadFragment(fragment: Fragment){
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.container, fragment)
         transaction.commit()
