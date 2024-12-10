@@ -133,7 +133,7 @@ class ItemDetailFragment : Fragment() {
                         startDateBooking.text = item?.getStartDate().toString()
                     },
                     calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.MONTH +1),
                     calendar.get(Calendar.DAY_OF_MONTH)
                 )
             }
@@ -159,7 +159,7 @@ class ItemDetailFragment : Fragment() {
                         endDateBooking.text = item?.getStartDate().toString()
                     },
                     calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.MONTH+1),
                     calendar.get(Calendar.DAY_OF_MONTH)
                 )
             }
