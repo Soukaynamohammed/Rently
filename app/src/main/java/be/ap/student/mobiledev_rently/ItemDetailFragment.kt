@@ -117,19 +117,8 @@ class ItemDetailFragment : Fragment() {
                 DatePickerDialog(
                     it1, { DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
                         val selectedDate = Calendar.getInstance()
-                        selectedDate.set(year, monthOfYear, dayOfMonth)
+                        selectedDate.set(year, monthOfYear + 1, dayOfMonth)
                         // Format the selected date into a string
-                        var itemId: String? = null
-                        runBlocking {
-                            launch {
-                                itemId = item?.let { it2 -> FireBaseCommunication().getItemId(it2) }
-                            }
-                                .join()
-                        }
-
-                        item?.setStartDate(LocalDate.of(year, monthOfYear, dayOfMonth).toString())
-                        itemId?.let { it2 -> FireBaseCommunication().updateItem(item!!, it2) }
-
                         startDateBooking.text = item?.getStartDate().toString()
                     },
                     calendar.get(Calendar.YEAR),
@@ -144,18 +133,7 @@ class ItemDetailFragment : Fragment() {
                 DatePickerDialog(
                     it1, { DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
                         val selectedDate = Calendar.getInstance()
-                        selectedDate.set(year, monthOfYear, dayOfMonth)
-                        var itemId: String? = null
-                        runBlocking {
-                            launch {
-                                itemId = item?.let { it2 -> FireBaseCommunication().getItemId(it2) }
-                            }
-                                .join()
-                        }
-
-                        item?.setStartDate(LocalDate.of(year, monthOfYear, dayOfMonth).toString())
-                        itemId?.let { it2 -> FireBaseCommunication().updateItem(item!!, it2) }
-
+                        selectedDate.set(year, monthOfYear + 1, dayOfMonth)
                         endDateBooking.text = item?.getStartDate().toString()
                     },
                     calendar.get(Calendar.YEAR),
@@ -169,7 +147,7 @@ class ItemDetailFragment : Fragment() {
             val bookingState = BookingState.AWAITING
             val startDate = binding.startDateBooking.text.toString()
             val endDate = binding.endDateBooking.text.toString()
-            val owner = "/users/" + item?.getOwner()
+            val owner = item?.getOwner()
             var rentee = ""
             var itemId = ""
             runBlocking{
