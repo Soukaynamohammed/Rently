@@ -169,19 +169,19 @@ class ItemDetailFragment : Fragment() {
             val bookingState = BookingState.AWAITING
             val startDate = binding.startDateBooking.text.toString()
             val endDate = binding.endDateBooking.text.toString()
-            val owner = item?.getOwner()
+            val owner = "/users/" + item?.getOwner()
             var rentee = ""
             var itemId = ""
             runBlocking{
                 launch(Dispatchers.IO){
-                    rentee = FireBaseCommunication().getUserID(user?.getEmail().toString()).toString()
-                    itemId = item?.let { it1 -> FireBaseCommunication().getItemId(it1) }.toString()
+                    rentee = "/users/" + FireBaseCommunication().getUserID(user?.getEmail().toString()).toString()
+                    itemId = "/items/" + item?.let { it1 -> FireBaseCommunication().getItemId(it1) }.toString()
                 }
             }
 
             val itemImage = item?.getImage()
             val itemName = item?.getTitle()
-            val booking: Booking = Booking(bookingState, startDate, endDate, owner, rentee, itemId, itemImage, itemName)
+            val booking = Booking(bookingState, startDate, endDate, owner, rentee, itemId, itemImage, itemName)
             if (LocalDate.parse(booking.getStartDate()) >= LocalDate.parse(item?.getStartDate()) && LocalDate.parse(booking.getEndDate()) <= LocalDate.parse(item?.getEndDate())) {
                 runBlocking {
                     launch(Dispatchers.IO) {
