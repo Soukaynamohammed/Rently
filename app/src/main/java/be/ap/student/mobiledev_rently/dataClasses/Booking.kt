@@ -3,14 +3,13 @@ package be.ap.student.mobiledev_rently.dataClasses
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.Log
-import be.ap.student.mobiledev_rently.util.StateType
+import be.ap.student.mobiledev_rently.util.BookingState
 import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
-import java.util.LinkedList
 
 @Parcelize
 class Booking() : Parcelable {
-    private var bookingState: StateType? = null
+    private var bookingState: BookingState? = null
     private var startDate: String? = null
     private var endDate: String? = null
     private var owner: String? = null
@@ -21,7 +20,7 @@ class Booking() : Parcelable {
 
 
 
-    constructor(bookingState: StateType?, startDate: String?, endDate: String?, owner: String?, rentee: String?, item: String?, itemImage: String?,itemName: String? ) : this() {
+    constructor(bookingState: BookingState?, startDate: String?, endDate: String?, owner: String?, rentee: String?, item: String?, itemImage: String?, itemName: String? ) : this() {
         this.bookingState = bookingState
         this.startDate = startDate
         this.endDate = endDate
@@ -47,10 +46,10 @@ class Booking() : Parcelable {
     fun setItemImage(itemImage: String?) {
         this.itemImage = itemImage
     }
-    fun getBookingState(): StateType? {
+    fun getBookingState(): BookingState? {
         return bookingState
     }
-    fun setBookingState(bookingState: StateType){
+    fun setBookingState(bookingState: BookingState){
         this.bookingState = bookingState
     }
     fun getStartDate(): String?{
@@ -87,7 +86,7 @@ class Booking() : Parcelable {
     companion object : Parceler<Booking> {
         override fun create(parcel: Parcel): Booking {
             val read = parcel.readString() ?: ""  // Avoid nullability issues
-            val bookingState = StateType.valueOf(read)
+            val bookingState = BookingState.valueOf(read)
             Log.d("booking", "create: $read")
 
             val startDate = parcel.readString() ?: ""
