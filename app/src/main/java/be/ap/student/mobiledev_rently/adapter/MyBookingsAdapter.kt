@@ -2,13 +2,21 @@ package be.ap.student.mobiledev_rently.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
+import be.ap.student.mobiledev_rently.MyBookingDetailPageFragment
+import be.ap.student.mobiledev_rently.MyBookingsFragment
+import be.ap.student.mobiledev_rently.MyItemDetailFragment
 import be.ap.student.mobiledev_rently.R
 import be.ap.student.mobiledev_rently.dataClasses.Booking
+import be.ap.student.mobiledev_rently.databinding.FragmentMyBookingsBinding
 import be.ap.student.mobiledev_rently.databinding.SingleBookingBinding
 import com.bumptech.glide.Glide
 
-class MyBookingsAdapter : RecyclerView.Adapter<MyBookingsAdapter.MyBookingsViewHolder>() {
+
+
+class MyBookingsAdapter(private val parentFragmentManager: FragmentManager) : RecyclerView.Adapter<MyBookingsAdapter.MyBookingsViewHolder>() {
+
     private var bookingList = listOf<Booking>()
 
     fun submitList(bookings: List<Booking>) {
@@ -24,12 +32,20 @@ class MyBookingsAdapter : RecyclerView.Adapter<MyBookingsAdapter.MyBookingsViewH
     }
 
     override fun onBindViewHolder(holder: MyBookingsViewHolder, position: Int) {
-        holder.bind(bookingList[position])
+        val booking = bookingList[position]
+        holder.bind(booking)
+
+        holder.binding.detailsButton.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, MyBookingDetailPageFragment.newInstance(booking))
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     override fun getItemCount(): Int = bookingList.size
 
-    inner class MyBookingsViewHolder(private val binding: SingleBookingBinding) :
+    inner class MyBookingsViewHolder(val binding: SingleBookingBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(booking: Booking) {
