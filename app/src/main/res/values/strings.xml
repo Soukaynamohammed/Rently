@@ -31,6 +31,8 @@
     <string name="available">Available</string>
     <string name="availability">Availability</string>
     <string name="rentingPeriod">Choose Your Renting Period</string>
+    <string name="rentingPeriodChosen">Chosen Renting Period</string>
+    <string name="cancel">Cancel</string>
     <string name="category">Category</string>
     <string name="from">From</string>
     <string name="date">Date</string>

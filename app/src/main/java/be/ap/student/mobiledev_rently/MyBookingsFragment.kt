@@ -18,7 +18,9 @@ import kotlinx.coroutines.launch
 class MyBookingsFragment : Fragment() {
     private lateinit var binding: FragmentMyBookingsBinding
     var user: User? = null
-    private val adapter = MyBookingsAdapter()
+    private val adapter by lazy {
+        MyBookingsAdapter(parentFragmentManager)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

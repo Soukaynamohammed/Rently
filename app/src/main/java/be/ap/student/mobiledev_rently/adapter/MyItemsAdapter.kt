@@ -30,7 +30,6 @@ class MyItemsAdapter : RecyclerView.Adapter<MyItemsAdapter.MyItemsViewHolder>(){
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyItemsViewHolder {
-        // Use SingleItemMyItemsBinding for the single item layout
         binding = SingleItemMyItemsBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
@@ -101,3 +100,4 @@ class MyItemsAdapter : RecyclerView.Adapter<MyItemsAdapter.MyItemsViewHolder>(){
     }
     private fun getColor(ctx: Context) = ctx.resources.getColor(R.color.error, ctx.theme)
 }
+
