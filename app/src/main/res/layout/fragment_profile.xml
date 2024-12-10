@@ -6,6 +6,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ProfileFragment">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:id="@+id/start_screen"
         android:layout_width="match_parent"
@@ -138,9 +141,10 @@
             android:textColor="@color/button_text"
             android:textSize="25sp"
             app:cornerRadius="5dp"
+            android:layout_marginBottom="20dp"
             />
 
 
     </LinearLayout>
-
+    </ScrollView>
 </FrameLayout>

@@ -5,5 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".RentalsFragment">
 
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewRentals"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        tools:listitem="@layout/single_booking" />
 </FrameLayout>
