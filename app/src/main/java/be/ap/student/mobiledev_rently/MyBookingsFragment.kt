@@ -35,7 +35,6 @@ class MyBookingsFragment : Fragment() {
     ): View? {
         binding = FragmentMyBookingsBinding.inflate(inflater, container, false)
         val view = binding.root
-        binding.root
 
         binding.recyclerViewBookings.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewBookings.adapter = adapter
@@ -47,7 +46,9 @@ class MyBookingsFragment : Fragment() {
 
     private fun fetchBookings() {
         CoroutineScope(Dispatchers.IO).launch {
+            Log.d("emailuser",user.toString())
             val bookings = FireBaseCommunication().getBookingsByRentee(user!!.getEmail().toString())
+
             bookings.forEach { booking ->
                 val itemId = booking.getItem()
                 Log.d("tag", "fetchBookings: $itemId")

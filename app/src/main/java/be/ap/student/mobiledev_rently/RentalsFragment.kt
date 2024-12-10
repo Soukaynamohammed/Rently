@@ -18,9 +18,9 @@ import kotlinx.coroutines.launch
 class RentalsFragment : Fragment() {
     private lateinit var binding: FragmentRentalsBinding
     var user: User? = null
-    private val adapter = RentalsAdapter()
-
-
+    private val adapter: RentalsAdapter by lazy {
+        RentalsAdapter(parentFragmentManager)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +37,7 @@ class RentalsFragment : Fragment() {
         val view = binding.root
         binding.root
 
+
         binding.recyclerViewRentals.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewRentals.adapter = adapter
 
@@ -51,7 +52,7 @@ class RentalsFragment : Fragment() {
             bookings.forEach { booking ->
                 val itemId = booking.getItem()
                 if (!itemId.isNullOrEmpty()) {
-                    val item = FireBaseCommunication().getItemById(itemId)
+                    val item = FireBaseCommunication().getItemByReference(itemId)
                 }
             }
             CoroutineScope(Dispatchers.Main).launch {

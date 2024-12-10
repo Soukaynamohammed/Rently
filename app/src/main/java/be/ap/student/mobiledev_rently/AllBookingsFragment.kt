@@ -48,6 +48,8 @@ class AllBookingsFragment : Fragment() {
         }
 
         myBookingsButton.setOnClickListener{
+            Log.d("emailallbookingsrentals",user.toString())
+
             user?.let {
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainerView, MyBookingsFragment.newInstance(it))
@@ -60,6 +62,7 @@ class AllBookingsFragment : Fragment() {
         }
 
         rentalsButton.setOnClickListener{
+            Log.d("emailallbookings",user.toString())
             user?.let {
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainerView, RentalsFragment.newInstance(it))
