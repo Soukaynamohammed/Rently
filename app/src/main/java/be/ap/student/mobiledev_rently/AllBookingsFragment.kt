@@ -47,13 +47,13 @@ class AllBookingsFragment : Fragment() {
             setActiveButton(rentalsButton, false)
         }
 
-        myBookingsButton.setOnClickListener{
-            Log.d("emailallbookingsrentals",user.toString())
-
+        myBookingsButton.setOnClickListener {
+            Log.d("emailallbookingsrentals", user.toString())
             user?.let {
+                // Replace MyBookingsFragment, and clear the back stack if needed
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainerView, MyBookingsFragment.newInstance(it))
-                    .addToBackStack(null)
+                    .addToBackStack(null) // Remove this line if you don't want to add to the back stack
                     .commit()
 
                 setActiveButton(myBookingsButton, true)
@@ -61,18 +61,20 @@ class AllBookingsFragment : Fragment() {
             }
         }
 
-        rentalsButton.setOnClickListener{
-            Log.d("emailallbookings",user.toString())
+        rentalsButton.setOnClickListener {
+            Log.d("emailallbookings", user.toString())
             user?.let {
+                // Replace RentalsFragment, and clear the back stack if needed
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainerView, RentalsFragment.newInstance(it))
-                    .addToBackStack(null)
+                    .addToBackStack(null) // Remove this line if you don't want to add to the back stack
                     .commit()
 
                 setActiveButton(myBookingsButton, false)
                 setActiveButton(rentalsButton, true)
             }
         }
+
 
         return view
     }

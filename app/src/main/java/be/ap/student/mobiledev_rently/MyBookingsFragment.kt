@@ -26,6 +26,8 @@ class MyBookingsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             user = it.getParcelable("user", User::class.java)
+            Log.d("MyBookingsFragment", "User: ${user.toString()}")
+
         }
     }
 
