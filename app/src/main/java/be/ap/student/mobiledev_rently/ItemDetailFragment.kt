@@ -13,9 +13,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import be.ap.student.mobiledev_rently.dataClasses.Booking
 import be.ap.student.mobiledev_rently.dataClasses.Item
 import be.ap.student.mobiledev_rently.dataClasses.LocationXml
+import be.ap.student.mobiledev_rently.dataClasses.User
 import be.ap.student.mobiledev_rently.databinding.FragmentItemDetailBinding
+import be.ap.student.mobiledev_rently.util.BookingState
 import be.ap.student.mobiledev_rently.util.FireBaseCommunication
 import com.bumptech.glide.Glide
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -44,6 +47,7 @@ import java.util.Calendar
 class ItemDetailFragment : Fragment() {
     private lateinit var binding: FragmentItemDetailBinding
     private var item: Item? = null
+    private var user: User? = null
     private val calendar = Calendar.getInstance()
     private lateinit var mapView: org.osmdroid.views.MapView
 
@@ -52,6 +56,7 @@ class ItemDetailFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             item = it.getParcelable("item", Item::class.java)
+            user = it.getParcelable("user", User::class.java)
         }
     }
 
@@ -160,7 +165,47 @@ class ItemDetailFragment : Fragment() {
             }
             datePickerDialog?.show()
         }
+        binding.rentButton.setOnClickListener {
+            val bookingState = BookingState.AWAITING
+            val startDate = binding.startDateBooking.text.toString()
+            val endDate = binding.endDateBooking.text.toString()
+            val owner = "/users/" + item?.getOwner()
+            var rentee = ""
+            var itemId = ""
+            runBlocking{
+                launch(Dispatchers.IO){
+                    rentee = "/users/" + FireBaseCommunication().getUserID(user?.getEmail().toString()).toString()
+                    itemId = "/items/" + item?.let { it1 -> FireBaseCommunication().getItemId(it1) }.toString()
+                }
+            }
 
+            val itemImage = item?.getImage()
+            val itemName = item?.getTitle()
+            val booking = Booking(bookingState, startDate, endDate, owner, rentee, itemId, itemImage, itemName)
+            if (LocalDate.parse(booking.getStartDate()) >= LocalDate.parse(item?.getStartDate()) && LocalDate.parse(booking.getEndDate()) <= LocalDate.parse(item?.getEndDate())) {
+                runBlocking {
+                    launch(Dispatchers.IO) {
+                        var bookings = FireBaseCommunication().getBookingsByItem(item!!)
+                        var available = true
+                        val bookingStartDate = LocalDate.parse(booking.getStartDate())
+                        val bookingEndDate = LocalDate.parse(booking.getEndDate())
+                        bookings = bookings.filter { it.getBookingState() == BookingState.ACCEPTED }
+                        bookings.forEach{
+                            if (!(bookingEndDate < LocalDate.parse(it.getStartDate())||LocalDate.parse(it.getEndDate()) < bookingStartDate)) {
+                                available = false
+                            }
+                        }
+                        if (available){
+                            FireBaseCommunication().addBooking(booking)
+                        }
+                    }
+                }
+                parentFragmentManager.beginTransaction().replace(R.id.container, MyBookingsFragment.newInstance(user)).commit()
+            } else {
+                Snackbar.make(binding.root, "Item is not available", Snackbar.LENGTH_LONG).show()
+            }
+
+        }
         runBlocking {
             launch(Dispatchers.IO) {
                 getLocationReverse(GeoPoint(item?.getLocation()?.latitude ?: 0.0, item?.getLocation()?.longitude ?: 0.0))
@@ -239,10 +284,11 @@ class ItemDetailFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(item: Item) =
+        fun newInstance(item: Item, user: User) =
             ItemDetailFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable("item", item)
+                    putParcelable("user", user)
                 }
             }
     }

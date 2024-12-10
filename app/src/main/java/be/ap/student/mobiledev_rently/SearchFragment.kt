@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import be.ap.student.mobiledev_rently.adapter.SearchAdapter
+import be.ap.student.mobiledev_rently.dataClasses.Item
 import be.ap.student.mobiledev_rently.dataClasses.User
 import be.ap.student.mobiledev_rently.databinding.FragmentSearchBinding
 import be.ap.student.mobiledev_rently.util.FireBaseCommunication
@@ -20,10 +23,6 @@ import com.google.android.gms.location.LocationServices
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-
-import android.text.Editable
-import android.text.TextWatcher
-import be.ap.student.mobiledev_rently.dataClasses.Item
 
 
 class SearchFragment : Fragment() {
@@ -72,7 +71,7 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = SearchAdapter(parentFragmentManager)
+        adapter = user?.let { SearchAdapter(parentFragmentManager, it) }!!
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter

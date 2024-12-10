@@ -10,7 +10,7 @@ import be.ap.student.mobiledev_rently.dataClasses.Booking
 import be.ap.student.mobiledev_rently.dataClasses.Item
 import be.ap.student.mobiledev_rently.databinding.SingleItemMyItemsBinding
 import be.ap.student.mobiledev_rently.util.FireBaseCommunication
-import be.ap.student.mobiledev_rently.util.StateType
+import be.ap.student.mobiledev_rently.util.BookingState
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.coroutines.launch
@@ -68,7 +68,7 @@ class MyItemsAdapter : RecyclerView.Adapter<MyItemsAdapter.MyItemsViewHolder>(){
                     }
 
                     bookings.forEach {
-                        if(it.getBookingState()== StateType.ACCEPTED && LocalDate.now()>=LocalDate.parse(it.getStartDate())&&LocalDate.now()<=LocalDate.parse(it.getEndDate())) {
+                        if(it.getBookingState()== BookingState.ACCEPTED && LocalDate.now()>=LocalDate.parse(it.getStartDate())&&LocalDate.now()<=LocalDate.parse(it.getEndDate())) {
                             availability = "Unavailable"
                         }
                     }

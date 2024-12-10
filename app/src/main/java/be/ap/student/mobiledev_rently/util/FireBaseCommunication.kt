@@ -6,7 +6,6 @@ import be.ap.student.mobiledev_rently.dataClasses.User
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.getField
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 import java.util.LinkedList
@@ -190,7 +189,7 @@ class FireBaseCommunication {
             if (task.result.size() == 0) return bookings
             for(booking in task.result) {
                 bookings.add(Booking(
-                    StateType.valueOf(booking.getString("title").toString()), booking.getString("startDate"),
+                    BookingState.valueOf(booking.getString("title").toString()), booking.getString("startDate"),
                     booking.getString("endDate"),
                     booking.getString("owner"), booking.getString("rentee"),
                     booking.getString("item"), booking.getString("itemImage")
@@ -263,5 +262,9 @@ class FireBaseCommunication {
         } catch (e: Exception) {
             throw e
         }
+    }
+    suspend fun addBooking(booking: Booking){
+        db.collection("boekingen").document()
+            .set(booking)
     }
 }

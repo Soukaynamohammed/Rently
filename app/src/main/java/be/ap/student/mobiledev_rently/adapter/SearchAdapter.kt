@@ -5,14 +5,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import be.ap.student.mobiledev_rently.ItemDetailFragment
-import be.ap.student.mobiledev_rently.MyItemDetailFragment
 import be.ap.student.mobiledev_rently.R
 import be.ap.student.mobiledev_rently.dataClasses.Item
-import be.ap.student.mobiledev_rently.databinding.SingleItemMyItemsBinding
+import be.ap.student.mobiledev_rently.dataClasses.User
 import be.ap.student.mobiledev_rently.databinding.SingleItemSearchItemsBinding
 import com.bumptech.glide.Glide
 
-class SearchAdapter(private val parentFragmentManager: FragmentManager) : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
+class SearchAdapter(private val parentFragmentManager: FragmentManager, private val user: User) : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
     private var itemList = listOf<Item>()
 
@@ -48,14 +47,14 @@ class SearchAdapter(private val parentFragmentManager: FragmentManager) : Recycl
 
             binding.editButton.setOnClickListener {
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.container, ItemDetailFragment.newInstance(item))
+                    .replace(R.id.container, ItemDetailFragment.newInstance(item, user))
                     .addToBackStack(null)
                     .commit()
             }
 
             binding.root.setOnClickListener {
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.container, ItemDetailFragment.newInstance(item))
+                    .replace(R.id.container, ItemDetailFragment.newInstance(item, user))
                     .addToBackStack(null)
                     .commit()
             }
