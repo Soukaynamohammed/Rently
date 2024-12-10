@@ -107,7 +107,7 @@ class MyItemDetailFragment : Fragment() {
                                 .join()
                         }
 
-                        item?.setStartDate(LocalDate.of(year, monthOfYear, dayOfMonth).toString())
+                        item?.setStartDate(LocalDate.of(year, monthOfYear + 1, dayOfMonth).toString())
                         itemId?.let { it2 -> FireBaseCommunication().updateItem(item!!, it2) }
                         // Update the TextView to display the selected date with the "Selected Date: " prefix
                         startDate.text = item?.getStartDate().toString()
@@ -141,7 +141,7 @@ class MyItemDetailFragment : Fragment() {
                                 .join()
                         }
 
-                        item?.setEndDate(LocalDate.of(year, monthOfYear, dayOfMonth).toString())
+                        item?.setEndDate(LocalDate.of(year, monthOfYear + 1, dayOfMonth).toString())
                         itemId?.let { it2 -> FireBaseCommunication().updateItem(item!!, it2) }
                         // Update the TextView to display the selected date with the "Selected Date: " prefix
                         endDate.text = item?.getEndDate().toString()
