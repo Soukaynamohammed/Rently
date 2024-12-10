@@ -1,6 +1,8 @@
 package be.ap.student.mobiledev_rently
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.DialogInterface
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import be.ap.student.mobiledev_rently.dataClasses.Item
 import be.ap.student.mobiledev_rently.databinding.FragmentMyItemDetailBinding
@@ -152,8 +155,36 @@ class MyItemDetailFragment : Fragment() {
             datePickerDialog?.show()
         }
 
+        binding.delete.setOnClickListener {
+            basicAlert()
+        }
+
         return view
 
+    }
+    private fun basicAlert(){
+
+        val builder = AlertDialog.Builder(this.context)
+
+        with(builder)
+        {
+            setTitle("RENTLY")
+            setMessage("Are you sure you want to delete this item?")
+            setPositiveButton("YES", DialogInterface.OnClickListener(positiveButtonClick))
+            setNegativeButton("NO", DialogInterface.OnClickListener(negativeButtonClick))
+            show()
+        }
+    }
+    private val positiveButtonClick = { _: DialogInterface, _: Int ->
+        runBlocking {
+            launch {
+                item?.let { it1 -> FireBaseCommunication().deleteItem(FireBaseCommunication().getItemId(it1)) }
+            }
+        }
+        parentFragmentManager.popBackStack()
+    }
+    private val negativeButtonClick = { _: DialogInterface, _: Int ->
+        Toast.makeText(requireContext(), "You cancelled deleting the item", Toast.LENGTH_LONG).show()
     }
     private fun loadImageFromFirebase(imageUrl: String?, imageView: ImageView) {
         if (imageUrl.isNullOrEmpty()) {

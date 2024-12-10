@@ -179,6 +179,11 @@ class FireBaseCommunication {
             }
     }
 
+    fun deleteItem(id: String?) {
+        if (id == null) return
+        db.collection("items").document(id)
+            .delete()
+    }
 
 
     suspend fun getBookingsYourItems(userId: String): List<Booking>{
