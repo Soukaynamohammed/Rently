@@ -1,15 +1,15 @@
 package be.ap.student.mobiledev_rently
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import be.ap.student.mobiledev_rently.adapter.MyBookingsAdapter
 import be.ap.student.mobiledev_rently.dataClasses.User
 import be.ap.student.mobiledev_rently.databinding.FragmentMyBookingsBinding
-import be.ap.student.mobiledev_rently.databinding.FragmentProfileBinding
 import be.ap.student.mobiledev_rently.util.FireBaseCommunication
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -50,8 +50,9 @@ class MyBookingsFragment : Fragment() {
             val bookings = FireBaseCommunication().getBookingsByRentee(user!!.getEmail().toString())
             bookings.forEach { booking ->
                 val itemId = booking.getItem()
+                Log.d("tag", "fetchBookings: $itemId")
                 if (!itemId.isNullOrEmpty()) {
-                    val item = FireBaseCommunication().getItemById(itemId)
+                    val item = FireBaseCommunication().getItemByReference(itemId)
                     item?.let {
                         booking.setItemName(it.getTitle())
                         booking.setItemImage(it.getImage())

@@ -81,6 +81,22 @@ class FireBaseCommunication {
         }
     }
 
+    suspend fun getItemByReference(reference: String): Item?{
+        try {
+            val task = db.document(reference).get()
+            task.await()
+            if (task.result.exists()) return null
+            val result = task.result
+            return Item(result.getString("title"), result.getString("category"),
+                result.getString("description"), result.getString("image"),
+                result.getGeoPoint("location"), result.getString("owner") ,
+                result.getDouble("price"), result.getString("startDate")?:"" ,
+                result.getString("endDate")?:"")
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
     suspend fun getItemsSearchItems(currentUserId: String): List<Item> {
         try {
             val task = items.whereNotEqualTo("owner","/users/$currentUserId").get()
@@ -156,8 +172,7 @@ class FireBaseCommunication {
     }
 
     fun updateItem(item: Item, id: String): Item{
-        db.collection("items").document(id)
-            .set(item)
+        db.collection("items").document(id).set(item)
         return item
     }
 //
