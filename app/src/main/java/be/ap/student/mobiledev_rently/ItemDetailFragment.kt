@@ -185,7 +185,19 @@ class ItemDetailFragment : Fragment() {
             if (LocalDate.parse(booking.getStartDate()) >= LocalDate.parse(item?.getStartDate()) && LocalDate.parse(booking.getEndDate()) <= LocalDate.parse(item?.getEndDate())) {
                 runBlocking {
                     launch(Dispatchers.IO) {
-                        FireBaseCommunication().addBooking(booking)
+                        var bookings = FireBaseCommunication().getBookingsByItem(item!!)
+                        var available = true
+                        val bookingStartDate = LocalDate.parse(booking.getStartDate())
+                        val bookingEndDate = LocalDate.parse(booking.getEndDate())
+                        bookings = bookings.filter { it.getBookingState() == BookingState.ACCEPTED }
+                        bookings.forEach{
+                            if (!(bookingEndDate < LocalDate.parse(it.getStartDate())||LocalDate.parse(it.getEndDate()) < bookingStartDate)) {
+                                available = false
+                            }
+                        }
+                        if (available){
+                            FireBaseCommunication().addBooking(booking)
+                        }
                     }
                 }
                 parentFragmentManager.beginTransaction().replace(R.id.container, MyBookingsFragment.newInstance(user)).commit()
