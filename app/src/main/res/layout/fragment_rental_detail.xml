@@ -151,17 +151,6 @@
                     android:textSize="17sp"
                     android:text="@string/date"
                     />
-                <Button
-                    android:id="@+id/startDateButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/Edit"
-                    android:textColor="@color/button_text"
-                    android:backgroundTint="@color/button_background"
-                    >
-                </Button>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -189,16 +178,6 @@
                     android:textSize="17sp"
                     android:text="@string/date"
                     />
-                <Button
-                    android:id="@+id/endDateButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="20dp"
-                    android:textColor="@color/button_text"
-                    android:backgroundTint="@color/button_background"
-                    android:text="@string/Edit">
-                </Button>
             </LinearLayout>
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -326,6 +305,7 @@
 
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="#ECE5DC">
@@ -353,6 +333,51 @@
                     android:backgroundTint="@color/red"
                     android:fontFamily="sans-serif"
                     android:text="@string/decline"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="25sp"
+                    app:cornerRadius="5dp"
+                    android:layout_marginBottom="30dp"
+                    android:layout_gravity="center_horizontal"
+                    />
+                <Button
+                    android:id="@+id/acceptedButton"
+                    android:layout_width="300dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="120dp"
+                    android:backgroundTint="@color/green"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/accepted"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="25sp"
+                    app:cornerRadius="5dp"
+                    android:layout_marginBottom="30dp"
+                    android:layout_gravity="center_horizontal"
+                    />
+                <Button
+                    android:id="@+id/cancelledButton"
+                    android:layout_width="300dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="120dp"
+                    android:backgroundTint="@color/red"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/cancelled"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="25sp"
+                    app:cornerRadius="5dp"
+                    android:layout_marginBottom="30dp"
+                    android:layout_gravity="center_horizontal"
+                    />
+                <Button
+                    android:id="@+id/declinedButton"
+                    android:layout_width="300dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="120dp"
+                    android:backgroundTint="@color/green"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/declined"
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     android:textSize="25sp"

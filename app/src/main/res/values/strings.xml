@@ -47,4 +47,7 @@
     <string name="_20km">20km</string>
     <string name="city">City</string>
     <string name="delete">DELETE</string>
+    <string name="accepted">ACCEPTED</string>
+    <string name="cancelled">CANCELLED</string>
+    <string name="declined">DECLINED</string>
 </resources>

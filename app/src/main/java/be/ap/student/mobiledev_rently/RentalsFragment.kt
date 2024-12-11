@@ -1,14 +1,13 @@
 package be.ap.student.mobiledev_rently
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import be.ap.student.mobiledev_rently.adapter.RentalsAdapter
 import be.ap.student.mobiledev_rently.dataClasses.User
-import be.ap.student.mobiledev_rently.databinding.FragmentProfileBinding
 import be.ap.student.mobiledev_rently.databinding.FragmentRentalsBinding
 import be.ap.student.mobiledev_rently.util.FireBaseCommunication
 import kotlinx.coroutines.CoroutineScope
@@ -27,6 +26,7 @@ class RentalsFragment : Fragment() {
         arguments?.let {
             user = it.getParcelable("user", User::class.java)
         }
+        requireNotNull(user) { "User object must be provided to RentalsFragment" }
     }
 
     override fun onCreateView(
@@ -53,6 +53,10 @@ class RentalsFragment : Fragment() {
                 val itemId = booking.getItem()
                 if (!itemId.isNullOrEmpty()) {
                     val item = FireBaseCommunication().getItemByReference(itemId)
+                    item?.let {
+                        booking.setItemName(it.getTitle())
+                        booking.setItemImage(it.getImage())
+                    }
                 }
             }
             CoroutineScope(Dispatchers.Main).launch {

@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 class MyBookingsFragment : Fragment() {
     private lateinit var binding: FragmentMyBookingsBinding
     var user: User? = null
-    private val adapter by lazy {
+    private val adapter: MyBookingsAdapter by lazy {
         MyBookingsAdapter(parentFragmentManager)
     }
 
@@ -27,6 +27,7 @@ class MyBookingsFragment : Fragment() {
         arguments?.let {
             user = it.getParcelable("user", User::class.java)
         }
+        requireNotNull(user) { "User object must be provided to MyBookingsFragment" }
     }
 
     override fun onCreateView(
