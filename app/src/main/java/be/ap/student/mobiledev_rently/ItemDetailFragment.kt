@@ -143,6 +143,7 @@ class ItemDetailFragment : Fragment() {
             }
             datePickerDialog?.show()
         }
+
         binding.rentButton.setOnClickListener {
             val bookingState = BookingState.AWAITING
             val startDate = binding.startDateBooking.text.toString()
@@ -211,6 +212,7 @@ class ItemDetailFragment : Fragment() {
             e.printStackTrace()
         }
     }
+
     private val kotlinXmlMapper = XmlMapper(JacksonXmlModule().apply {
         setDefaultUseWrapper(false)
     }).registerKotlinModule()
